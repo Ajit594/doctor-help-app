@@ -1,0 +1,33 @@
+{
+  "name": "doctor-help",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "apps/*",
+      "services/*",
+      "packages/*"
+    ],
+    "nohoist": [
+      "**/react-native",
+      "**/react-native/**",
+      "**/expo",
+      "**/expo/**",
+      "**/babel-preset-expo",
+      "**/babel-preset-expo/**",
+      "**/@babel/**",
+      "**/metro",
+      "**/metro/**"
+    ]
+  },
+  "scripts": {
+    "dev:mobile": "cd apps/mobile && npm start -- --tunnel",
+    "dev:admin": "cd apps/admin && npm run dev",
+    "dev:web": "cd apps/web && npm run dev",
+    "dev:api": "cd services/api && npm run dev",
+    "build": "npm run build --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  }
+}

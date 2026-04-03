@@ -3,9 +3,10 @@ import 'package:flutter/foundation.dart';
 /// API Configuration
 class ApiConfig {
   // Base URL - Change based on environment
-  // Development: Use 10.0.2.2 for Android emulator (maps to host localhost)
-  // Example: https://abc123.ngrok.io/api
-  static const String baseUrl = 'http://10.0.2.2:3001/api';
+    // Default to staging API to avoid emulator-localhost timeouts.
+    // For local backend development, pass:
+    // --dart-define=API_URL=http://10.0.2.2:3001/api
+    static const String baseUrl = 'https://api-staging.doctorhelp.in/api';
 
   // API Timeouts
   static const Duration timeout = Duration(seconds: 30);

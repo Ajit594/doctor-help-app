@@ -11,6 +11,13 @@ android {
     compileSdk = 36
     ndkVersion = flutter.ndkVersion
 
+    packaging {
+        jniLibs {
+            // Prevent stripDebugDebugSymbols failures on low-resource Windows setups.
+            keepDebugSymbols += ["**/*.so"]
+        }
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8

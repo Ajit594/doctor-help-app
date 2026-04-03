@@ -26,6 +26,8 @@ class _VerifyOtpScreenState extends ConsumerState<VerifyOtpScreen> {
   int _secondsRemaining = _resendCooldown;
   Timer? _timer;
   bool _canResend = false;
+  bool _isVerifying = false;
+  bool _hasNavigatedAfterVerify = false;
 
   @override
   void initState() {
@@ -103,15 +105,22 @@ class _VerifyOtpScreenState extends ConsumerState<VerifyOtpScreen> {
   }
 
   Future<void> _handleVerifyOtp() async {
+    if (_isVerifying || _hasNavigatedAfterVerify) return;
     if (!_formKey.currentState!.validate()) return;
+
+    _isVerifying = true;
 
     final authNotifier = ref.read(authStateProvider.notifier);
     final success =
         await authNotifier.verifyOtp(widget.phone, _otpController.text);
 
-    if (!mounted) return;
+    if (!mounted) {
+      _isVerifying = false;
+      return;
+    }
 
     if (success) {
+      _hasNavigatedAfterVerify = true;
       final authState = ref.read(authStateProvider);
       final hasName = (authState.user?.name ?? '').trim().isNotEmpty;
       if (authState.isNewUser || !hasName) {
@@ -138,6 +147,7 @@ class _VerifyOtpScreenState extends ConsumerState<VerifyOtpScreen> {
           backgroundColor: Colors.red,
         ),
       );
+      _isVerifying = false;
     }
   }
 
@@ -149,7 +159,15 @@ class _VerifyOtpScreenState extends ConsumerState<VerifyOtpScreen> {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => context.pop(),
+          onPressed: authState.isLoading
+              ? null
+              : () {
+                  if (context.canPop()) {
+                    context.pop();
+                  } else {
+                    context.go(AppRoutes.login);
+                  }
+                },
         ),
         title: const Text('Verify OTP'),
         centerTitle: true,

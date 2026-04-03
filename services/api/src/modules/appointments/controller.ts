@@ -240,7 +240,12 @@ export const getAppointment = async (req: Request, res: Response) => {
 
         // Verify permission: patient owns it, doctor owns it, or user is admin
         const isPatient = appointment.patientId.toString() === authReq.user?.userId;
-        const isDoctor = appointment.doctorId.userId?._id?.toString() === authReq.user?.userId;
+        const doctorUserRef = (appointment.doctorId as any)?.userId;
+        const doctorUserId =
+            (doctorUserRef as any)?._id?.toString?.() ||
+            doctorUserRef?.toString?.() ||
+            null;
+        const isDoctor = doctorUserId === authReq.user?.userId;
         const isAdmin = authReq.user?.role === 'admin';
 
         if (!isPatient && !isDoctor && !isAdmin) {

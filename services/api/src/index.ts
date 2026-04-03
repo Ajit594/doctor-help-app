@@ -34,6 +34,22 @@ import { notificationsRouter } from './modules/notifications/routes';
 const app = express();
 const PORT = Number(process.env.PORT || 3001);
 
+// Behind nginx/reverse proxy, trust the first proxy hop for correct client IP and rate-limiting.
+const trustProxyRaw = (process.env.TRUST_PROXY || '').trim();
+if (trustProxyRaw) {
+    const normalized = trustProxyRaw.toLowerCase();
+    if (normalized === 'true') {
+        app.set('trust proxy', 1);
+    } else if (normalized === 'false') {
+        app.set('trust proxy', false);
+    } else {
+        const asNumber = Number(trustProxyRaw);
+        app.set('trust proxy', Number.isFinite(asNumber) ? asNumber : trustProxyRaw);
+    }
+} else if (process.env.NODE_ENV === 'production') {
+    app.set('trust proxy', 1);
+}
+
 // Database connection
 const connectDB = async () => {
     try {

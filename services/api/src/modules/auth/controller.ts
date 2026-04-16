@@ -20,6 +20,7 @@ const JWT_EXPIRATION = process.env.JWT_EXPIRATION || '45d';
 const OTP_DEV_MODE = (process.env.OTP_DEV_MODE || '').toLowerCase() === 'true';
 const OTP_DEV_FALLBACK = process.env.OTP_DEV_OTP || '123456';
 const REVIEW_OTP_ENABLED = (process.env.REVIEW_OTP_ENABLED || '').toLowerCase() === 'true';
+const REVIEW_OTP_PAIRS = process.env.REVIEW_OTP_PAIRS || '';
 const REVIEW_OTP_MOBILE = process.env.REVIEW_OTP_MOBILE || '';
 const REVIEW_OTP_VALUE = process.env.REVIEW_OTP_VALUE || '112233';
 const normalizeMobile = (value: string): string => {
@@ -27,16 +28,44 @@ const normalizeMobile = (value: string): string => {
     return /^91\d{10}$/.test(digitsOnly) ? digitsOnly.slice(2) : digitsOnly;
 };
 
+const getReviewOtpForMobile = (normalizedMobile: string): string | null => {
+    if (!REVIEW_OTP_ENABLED) {
+        return null;
+    }
+
+    // Preferred format (supports multiple reviewer accounts):
+    // REVIEW_OTP_PAIRS=9988550000:112233,9988550001:223344
+    if (REVIEW_OTP_PAIRS.trim()) {
+        const pairs = REVIEW_OTP_PAIRS.split(',');
+        for (const pair of pairs) {
+            const [rawMobile, rawOtp] = pair.split(':').map((value) => value?.trim() || '');
+            const mobile = normalizeMobile(rawMobile);
+            const otp = rawOtp;
+            if (!/^\d{10}$/.test(mobile) || !/^\d{6}$/.test(otp)) {
+                continue;
+            }
+            if (mobile === normalizedMobile) {
+                return otp;
+            }
+        }
+    }
+
+    // Backward-compatible fallback (single reviewer account)
+    const fallbackMobile = REVIEW_OTP_MOBILE ? normalizeMobile(REVIEW_OTP_MOBILE) : '';
+    if (/^\d{10}$/.test(fallbackMobile) && fallbackMobile === normalizedMobile && /^\d{6}$/.test(REVIEW_OTP_VALUE)) {
+        return REVIEW_OTP_VALUE;
+    }
+
+    return null;
+};
+
 /** POST /api/auth/send-otp — Generate and send OTP to a mobile number. */
 export const sendOtpController = async (req: Request, res: Response) => {
     try {
         const { mobile } = req.body as { mobile: string };
         const normalizedMobile = normalizeMobile(mobile);
-        const normalizedReviewMobile = REVIEW_OTP_MOBILE ? normalizeMobile(REVIEW_OTP_MOBILE) : '';
-        const isReviewOtpRequest =
-            REVIEW_OTP_ENABLED
-            && normalizedReviewMobile.length > 0
-            && normalizedMobile === normalizedReviewMobile;
+        const reviewOtpValue = getReviewOtpForMobile(normalizedMobile);
+        const isReviewOtpRequest = !!reviewOtpValue;
 
         // Cooldown guard: prevent resend within 60 seconds
         const existingOtp = await Otp.findOne({ mobile: normalizedMobile }).sort({ createdAt: -1 });
@@ -53,7 +82,7 @@ export const sendOtpController = async (req: Request, res: Response) => {
         }
 
         const otp = isReviewOtpRequest
-            ? REVIEW_OTP_VALUE
+            ? reviewOtpValue
             : OTP_DEV_MODE
             ? OTP_DEV_FALLBACK
             : generateOTP();

@@ -19,6 +19,9 @@ const OTP_EXPIRY_MINUTES = 10;
 const JWT_EXPIRATION = process.env.JWT_EXPIRATION || '45d';
 const OTP_DEV_MODE = (process.env.OTP_DEV_MODE || '').toLowerCase() === 'true';
 const OTP_DEV_FALLBACK = process.env.OTP_DEV_OTP || '123456';
+const REVIEW_OTP_ENABLED = (process.env.REVIEW_OTP_ENABLED || '').toLowerCase() === 'true';
+const REVIEW_OTP_MOBILE = process.env.REVIEW_OTP_MOBILE || '';
+const REVIEW_OTP_VALUE = process.env.REVIEW_OTP_VALUE || '112233';
 const normalizeMobile = (value: string): string => {
     const digitsOnly = value.replace(/\D/g, '');
     return /^91\d{10}$/.test(digitsOnly) ? digitsOnly.slice(2) : digitsOnly;
@@ -29,6 +32,11 @@ export const sendOtpController = async (req: Request, res: Response) => {
     try {
         const { mobile } = req.body as { mobile: string };
         const normalizedMobile = normalizeMobile(mobile);
+        const normalizedReviewMobile = REVIEW_OTP_MOBILE ? normalizeMobile(REVIEW_OTP_MOBILE) : '';
+        const isReviewOtpRequest =
+            REVIEW_OTP_ENABLED
+            && normalizedReviewMobile.length > 0
+            && normalizedMobile === normalizedReviewMobile;
 
         // Cooldown guard: prevent resend within 60 seconds
         const existingOtp = await Otp.findOne({ mobile: normalizedMobile }).sort({ createdAt: -1 });
@@ -44,7 +52,11 @@ export const sendOtpController = async (req: Request, res: Response) => {
             }
         }
 
-        const otp = OTP_DEV_MODE ? OTP_DEV_FALLBACK : generateOTP();
+        const otp = isReviewOtpRequest
+            ? REVIEW_OTP_VALUE
+            : OTP_DEV_MODE
+            ? OTP_DEV_FALLBACK
+            : generateOTP();
         const expiresAt = new Date(Date.now() + OTP_EXPIRY_MINUTES * 60 * 1000);
 
         await Otp.deleteMany({ mobile: normalizedMobile });
@@ -55,9 +67,13 @@ export const sendOtpController = async (req: Request, res: Response) => {
         });
 
         let smsSent = false;
-        if (OTP_DEV_MODE) {
+        if (OTP_DEV_MODE || isReviewOtpRequest) {
             smsSent = true;
-            console.info(`OTP_DEV_MODE enabled. Skipping SMS send for ${normalizedMobile}`);
+            console.info(
+                isReviewOtpRequest
+                    ? `REVIEW_OTP enabled. Skipping SMS send for ${normalizedMobile}`
+                    : `OTP_DEV_MODE enabled. Skipping SMS send for ${normalizedMobile}`
+            );
         } else {
             smsSent = await sendOTP(normalizedMobile, otp);
             if (!smsSent) {

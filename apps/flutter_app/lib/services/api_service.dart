@@ -362,12 +362,18 @@ class ApiService {
   ]) {
     if (ApiConfig.debugMode) {
       logger.i('Status Code: ${response.statusCode}');
+      logger.i('Content-Type: ${response.headers['content-type']}');
       logger.i('Response: ${response.body}');
     }
 
     try {
-      final trimmedBody = response.body.trim();
-      final decoded = trimmedBody.isNotEmpty ? jsonDecode(trimmedBody) : null;
+      final rawBody = utf8.decode(response.bodyBytes, allowMalformed: true);
+      final trimmedBody = rawBody.replaceFirst(RegExp(r'^\uFEFF'), '').trim();
+      final looksLikeJson =
+          trimmedBody.startsWith('{') || trimmedBody.startsWith('[');
+      final decoded = (trimmedBody.isNotEmpty && looksLikeJson)
+          ? jsonDecode(trimmedBody)
+          : null;
       final json =
           decoded is Map<String, dynamic> ? decoded : <String, dynamic>{};
       final plainTextBody = trimmedBody.isNotEmpty ? trimmedBody : null;
@@ -458,9 +464,16 @@ class ApiService {
       }
     } catch (e) {
       logger.e('Parse Error: $e');
+      final rawBody = utf8.decode(response.bodyBytes, allowMalformed: true);
+      final snippet = rawBody.replaceAll(RegExp(r'\s+'), ' ').trim();
+      final shortSnippet =
+          snippet.length > 140 ? '${snippet.substring(0, 140)}...' : snippet;
+      final fallback = shortSnippet.isNotEmpty
+          ? 'Unexpected server response (${response.statusCode}): $shortSnippet'
+          : 'Unexpected server response (${response.statusCode})';
       return ApiResponse<T>(
         success: false,
-        error: 'Failed to parse response',
+        error: fallback,
       );
     }
   }

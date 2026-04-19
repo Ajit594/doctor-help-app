@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Doctor Help | Trusted Healthcare Access</title>
+    <meta name="description" content="Doctor Help connects patients, doctors, and labs with secure appointment booking and healthcare workflows." />
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container nav">
+        <a class="brand" href="index.html" aria-label="Doctor Help home">
+          <img class="brand-logo" src="assets/logo.png" alt="Doctor Help logo" />
+          <span>Doctor<span class="brand-dot">Help</span></span>
+        </a>
+        <nav class="nav-links">
+          <a href="privacy-policy.html">Privacy Policy</a>
+          <a href="account-deletion.html">Account Deletion</a>
+          <a href="terms.html">Terms</a>
+          <a href="contact.html">Contact</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container hero">
+      <section class="hero-card">
+        <h1>Healthcare Access, Simplified for Patients, Doctors, and Labs.</h1>
+        <p>
+          Doctor Help is a secure healthcare platform for appointment booking,
+          role-based onboarding, and trusted communication across patient,
+          doctor, and lab workflows.
+        </p>
+        <div class="badges">
+          <span class="badge">OTP-secured sign in</span>
+          <span class="badge">Role-based onboarding</span>
+          <span class="badge">Encrypted in transit</span>
+        </div>
+        <a class="btn" href="contact.html">Contact Support</a>
+      </section>
+
+      <section class="grid">
+        <article class="card">
+          <h3>For Patients</h3>
+          <p>Discover doctors, book appointments, and receive updates with a simple mobile experience.</p>
+        </article>
+        <article class="card">
+          <h3>For Doctors</h3>
+          <p>Complete verification, manage profile details, and serve patients through a structured workflow.</p>
+        </article>
+        <article class="card">
+          <h3>For Labs</h3>
+          <p>Submit onboarding details, complete approval processes, and manage lab-related service flows.</p>
+        </article>
+        <article class="card">
+          <h3>Compliance and Trust</h3>
+          <p>Review our privacy, deletion, and legal policies maintained for Google Play and user transparency.</p>
+        </article>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <div>Doctor Help</div>
+        <div class="footer-links">
+          <a href="privacy-policy.html">Privacy Policy</a>
+          <a href="account-deletion.html">Account Deletion</a>
+          <a href="terms.html">Terms and Conditions</a>
+          <a href="contact.html">Contact</a>
+        </div>
+        <div class="footer-copy">&copy; <span id="year"></span> Doctor Help. All rights reserved.</div>
+      </div>
+    </footer>
+
+    <script>
+      document.getElementById('year').textContent = new Date().getFullYear();
+    </script>
+  </body>
+</html>

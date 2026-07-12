@@ -103,7 +103,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(UIConstants.spacingLarge),
                 decoration: BoxDecoration(
-                  color: theme.primaryColor.withOpacity(0.08),
+                  color: theme.primaryColor.withValues(alpha: 0.08),
                   borderRadius: BorderRadius.circular(UIConstants.radiusMedium),
                 ),
                 child: Column(
@@ -136,26 +136,32 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                 ),
               ),
               const SizedBox(height: UIConstants.spacingMedium),
-              RadioListTile<String>(
-                value: 'upi',
+              RadioGroup<String>(
                 groupValue: _selectedMethod,
-                title: const Text('UPI'),
-                subtitle: const Text('Pay using any UPI app'),
-                onChanged: (value) => setState(() => _selectedMethod = value!),
-              ),
-              RadioListTile<String>(
-                value: 'card',
-                groupValue: _selectedMethod,
-                title: const Text('Card'),
-                subtitle: const Text('Credit / Debit Card'),
-                onChanged: (value) => setState(() => _selectedMethod = value!),
-              ),
-              RadioListTile<String>(
-                value: 'netbanking',
-                groupValue: _selectedMethod,
-                title: const Text('Net Banking'),
-                subtitle: const Text('All major banks supported'),
-                onChanged: (value) => setState(() => _selectedMethod = value!),
+                onChanged: (value) {
+                  if (value != null) {
+                    setState(() => _selectedMethod = value);
+                  }
+                },
+                child: const Column(
+                  children: [
+                    RadioListTile<String>(
+                      value: 'upi',
+                      title: Text('UPI'),
+                      subtitle: Text('Pay using any UPI app'),
+                    ),
+                    RadioListTile<String>(
+                      value: 'card',
+                      title: Text('Card'),
+                      subtitle: Text('Credit / Debit Card'),
+                    ),
+                    RadioListTile<String>(
+                      value: 'netbanking',
+                      title: Text('Net Banking'),
+                      subtitle: Text('All major banks supported'),
+                    ),
+                  ],
+                ),
               ),
               const SizedBox(height: UIConstants.spacing2XLarge),
               Text(

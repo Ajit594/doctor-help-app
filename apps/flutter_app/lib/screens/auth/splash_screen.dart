@@ -110,7 +110,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                       ),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black.withOpacity(0.06),
+                          color: Colors.black.withValues(alpha: 0.06),
                           blurRadius: 18,
                           offset: const Offset(0, 8),
                         ),
@@ -122,7 +122,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
                           return Container(
-                            color: theme.primaryColor.withOpacity(0.08),
+                            color: theme.primaryColor.withValues(alpha: 0.08),
                             child: Icon(
                               Icons.local_hospital,
                               size: 56,

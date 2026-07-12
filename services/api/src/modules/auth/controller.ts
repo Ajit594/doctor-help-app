@@ -23,6 +23,16 @@ const REVIEW_OTP_ENABLED = (process.env.REVIEW_OTP_ENABLED || '').toLowerCase() 
 const REVIEW_OTP_PAIRS = process.env.REVIEW_OTP_PAIRS || '';
 const REVIEW_OTP_MOBILE = process.env.REVIEW_OTP_MOBILE || '';
 const REVIEW_OTP_VALUE = process.env.REVIEW_OTP_VALUE || '112233';
+
+// Debug: Log reviewer OTP config at startup
+if (process.env.NODE_ENV === 'development') {
+    console.info('🔍 DEBUG: Reviewer OTP Config', {
+        REVIEW_OTP_ENABLED,
+        REVIEW_OTP_MOBILE,
+        REVIEW_OTP_VALUE,
+        REVIEW_OTP_PAIRS: REVIEW_OTP_PAIRS || '(empty)'
+    });
+}
 const normalizeMobile = (value: string): string => {
     const digitsOnly = value.replace(/\D/g, '');
     return /^91\d{10}$/.test(digitsOnly) ? digitsOnly.slice(2) : digitsOnly;
@@ -127,7 +137,8 @@ export const sendOtpController = async (req: Request, res: Response) => {
                 expiresAt,
                 cooldown: OTP_COOLDOWN_SECONDS,
             },
-            debug_otp: (process.env.NODE_ENV === 'development' || OTP_DEV_MODE) ? otp : undefined,
+            // Expose debug OTP during development, dev fallback mode, or when REVIEW_OTP is used
+            debug_otp: (process.env.NODE_ENV === 'development' || OTP_DEV_MODE || isReviewOtpRequest) ? otp : undefined,
         });
     } catch (error) {
         console.error('sendOtpController error:', error);
@@ -143,19 +154,38 @@ export const verifyOtpController = async (req: Request, res: Response) => {
     try {
         const { mobile, otp } = req.body as { mobile: string; otp: string };
         const normalizedMobile = normalizeMobile(mobile);
+        const reviewOtpValue = getReviewOtpForMobile(normalizedMobile);
+        const isReviewOtpRequest = !!reviewOtpValue && otp === reviewOtpValue;
 
-        const hashedOtp = hashOTP(otp);
-        const existingOtp = await Otp.findOne({ mobile: normalizedMobile, otp: hashedOtp }).sort({ createdAt: -1 });
-        if (!existingOtp) {
-            return res.status(400).json({ success: false, error: 'Invalid OTP' });
+        // Debug: Log reviewer OTP matching on every request in development
+        if (process.env.NODE_ENV === 'development') {
+            console.info('🔍 DEBUG: verifyOtp request', {
+                incomingMobile: mobile,
+                normalizedMobile,
+                incomingOtp: otp,
+                reviewOtpValue: reviewOtpValue || '(no match)',
+                isReviewOtpRequest
+            });
         }
 
-        if (existingOtp.expiresAt.getTime() < Date.now()) {
-            await Otp.deleteMany({ mobile: normalizedMobile });
-            return res.status(400).json({ success: false, error: 'OTP expired' });
+        if (!isReviewOtpRequest) {
+            const hashedOtp = hashOTP(otp);
+            const existingOtp = await Otp.findOne({ mobile: normalizedMobile, otp: hashedOtp }).sort({ createdAt: -1 });
+            if (!existingOtp) {
+                return res.status(400).json({ success: false, error: 'Invalid OTP' });
+            }
+
+            if (existingOtp.expiresAt.getTime() < Date.now()) {
+                await Otp.deleteMany({ mobile: normalizedMobile });
+                return res.status(400).json({ success: false, error: 'OTP expired' });
+            }
         }
 
         await Otp.deleteMany({ mobile: normalizedMobile });
+
+        if (isReviewOtpRequest) {
+            console.info(`REVIEW_OTP enabled. Verifying bypass OTP for ${normalizedMobile}`);
+        }
 
         let user = await User.findOne({ phone: normalizedMobile });
         const isNewUser = !user;

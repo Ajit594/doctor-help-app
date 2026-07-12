@@ -552,7 +552,7 @@ class _FilterChip extends StatelessWidget {
     return Chip(
       label: Text(label),
       onDeleted: onRemove,
-      backgroundColor: theme.primaryColor.withOpacity(0.1),
+      backgroundColor: theme.primaryColor.withValues(alpha: 0.1),
       labelStyle: TextStyle(color: theme.primaryColor),
     );
   }

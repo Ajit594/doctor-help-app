@@ -177,7 +177,7 @@ class _NotificationSettingsScreenState
         ),
         value: value,
         onChanged: onChanged,
-        activeColor: theme.primaryColor,
+        activeThumbColor: theme.primaryColor,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(UIConstants.radiusMedium),
         ),

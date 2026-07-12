@@ -243,10 +243,10 @@ class _LabRegistrationRequestScreenState
                   width: double.infinity,
                   padding: const EdgeInsets.all(UIConstants.spacingSmall),
                   decoration: BoxDecoration(
-                    color: Colors.blue.withOpacity(0.06),
+                    color: Colors.blue.withValues(alpha: 0.06),
                     borderRadius:
                         BorderRadius.circular(UIConstants.radiusSmall),
-                    border: Border.all(color: Colors.blue.withOpacity(0.2)),
+                    border: Border.all(color: Colors.blue.withValues(alpha: 0.2)),
                   ),
                   child: Text(
                     'Your verified account phone is linked automatically. Add an alternate business number only if needed.',
@@ -268,11 +268,11 @@ class _LabRegistrationRequestScreenState
                         width: double.infinity,
                         padding: const EdgeInsets.all(UIConstants.spacingSmall),
                         decoration: BoxDecoration(
-                          color: Colors.grey.withOpacity(0.08),
+                          color: Colors.grey.withValues(alpha: 0.08),
                           borderRadius:
                               BorderRadius.circular(UIConstants.radiusSmall),
                           border:
-                              Border.all(color: Colors.grey.withOpacity(0.2)),
+                              Border.all(color: Colors.grey.withValues(alpha: 0.2)),
                         ),
                         child: Row(
                           children: [
@@ -400,7 +400,7 @@ class _LabRegistrationRequestScreenState
                 ),
                 const SizedBox(height: UIConstants.spacingSmall),
                 DropdownButtonFormField<String>(
-                  value: _selectedDocumentType,
+                  initialValue: _selectedDocumentType,
                   decoration: const InputDecoration(
                     labelText: 'Document Type',
                     border: OutlineInputBorder(),

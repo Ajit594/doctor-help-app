@@ -342,7 +342,7 @@ class _DoctorProfileScreenState extends ConsumerState<DoctorProfileScreen> {
               ),
               const SizedBox(height: UIConstants.spacingMedium),
               DropdownButtonFormField<int>(
-                value: selectedDay,
+                initialValue: selectedDay,
                 items: List.generate(
                   AppConstants.daysOfWeek.length,
                   (i) => DropdownMenuItem(
@@ -547,7 +547,7 @@ class _DoctorProfileScreenState extends ConsumerState<DoctorProfileScreen> {
 
                   // Specialization Dropdown
                   DropdownButtonFormField<String>(
-                    value: _normalizeSpecialization(_selectedSpecialization),
+                    initialValue: _normalizeSpecialization(_selectedSpecialization),
                     items: specializations
                         .map((spec) => DropdownMenuItem(
                               value: spec,
@@ -614,7 +614,7 @@ class _DoctorProfileScreenState extends ConsumerState<DoctorProfileScreen> {
                               CircleAvatar(
                                 radius: 50,
                                 backgroundColor:
-                                    theme.primaryColor.withOpacity(0.2),
+                                    theme.primaryColor.withValues(alpha: 0.2),
                                 backgroundImage:
                                     doctorProfile?.photoUrl != null &&
                                             doctorProfile!.photoUrl!.isNotEmpty
@@ -633,7 +633,7 @@ class _DoctorProfileScreenState extends ConsumerState<DoctorProfileScreen> {
                                 Positioned.fill(
                                   child: Container(
                                     decoration: BoxDecoration(
-                                      color: Colors.black.withOpacity(0.4),
+                                      color: Colors.black.withValues(alpha: 0.4),
                                       shape: BoxShape.circle,
                                     ),
                                     child: const Center(
@@ -681,10 +681,10 @@ class _DoctorProfileScreenState extends ConsumerState<DoctorProfileScreen> {
                           ),
                           decoration: BoxDecoration(
                             color: isVerificationStatusLoading
-                                ? Colors.grey.withOpacity(0.12)
+                                ? Colors.grey.withValues(alpha: 0.12)
                                 : isDoctorVerified
-                                    ? Colors.green.withOpacity(0.1)
-                                    : Colors.orange.withOpacity(0.1),
+                                    ? Colors.green.withValues(alpha: 0.1)
+                                    : Colors.orange.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: Text(
@@ -710,11 +710,11 @@ class _DoctorProfileScreenState extends ConsumerState<DoctorProfileScreen> {
                             padding:
                                 const EdgeInsets.all(UIConstants.spacingMedium),
                             decoration: BoxDecoration(
-                              color: Colors.orange.withOpacity(0.1),
+                              color: Colors.orange.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(
                                   UIConstants.radiusMedium),
                               border: Border.all(
-                                color: Colors.orange.withOpacity(0.3),
+                                color: Colors.orange.withValues(alpha: 0.3),
                               ),
                             ),
                             child: Column(

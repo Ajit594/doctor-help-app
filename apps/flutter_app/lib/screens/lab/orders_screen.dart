@@ -77,7 +77,7 @@ class _LabOrdersScreenState extends ConsumerState<LabOrdersScreen> {
                 0,
               ),
               child: DropdownButtonFormField<String>(
-                value: _status,
+                initialValue: _status,
                 decoration: const InputDecoration(
                   labelText: 'Filter by status',
                   border: OutlineInputBorder(),

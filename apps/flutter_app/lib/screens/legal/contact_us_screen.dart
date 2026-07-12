@@ -74,7 +74,7 @@ class ContactUsScreen extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(UIConstants.spacingMedium),
               decoration: BoxDecoration(
-                color: theme.primaryColor.withOpacity(0.1),
+                color: theme.primaryColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(UIConstants.radiusMedium),
               ),
               child: Column(

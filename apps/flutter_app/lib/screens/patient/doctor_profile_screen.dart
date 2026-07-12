@@ -78,7 +78,7 @@ class _DoctorProfileScreenState extends ConsumerState<DoctorProfileScreen> {
                         gradient: LinearGradient(
                           colors: [
                             theme.primaryColor,
-                            theme.primaryColor.withOpacity(0.7),
+                            theme.primaryColor.withValues(alpha: 0.7),
                           ],
                           begin: Alignment.topLeft,
                           end: Alignment.bottomRight,
@@ -157,7 +157,7 @@ class _DoctorProfileScreenState extends ConsumerState<DoctorProfileScreen> {
                               Container(
                                 padding: const EdgeInsets.all(8),
                                 decoration: BoxDecoration(
-                                  color: Colors.green.withOpacity(0.1),
+                                  color: Colors.green.withValues(alpha: 0.1),
                                   borderRadius: BorderRadius.circular(8),
                                 ),
                                 child: const Icon(
@@ -196,7 +196,7 @@ class _DoctorProfileScreenState extends ConsumerState<DoctorProfileScreen> {
                           padding:
                               const EdgeInsets.all(UIConstants.spacingMedium),
                           decoration: BoxDecoration(
-                            color: theme.primaryColor.withOpacity(0.1),
+                            color: theme.primaryColor.withValues(alpha: 0.1),
                             borderRadius:
                                 BorderRadius.circular(UIConstants.radiusMedium),
                           ),
@@ -509,7 +509,7 @@ class _ReviewCard extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 16,
-                backgroundColor: theme.primaryColor.withOpacity(0.1),
+                backgroundColor: theme.primaryColor.withValues(alpha: 0.1),
                 backgroundImage: review.patientId.avatar != null
                     ? NetworkImage(review.patientId.avatar!)
                     : null,

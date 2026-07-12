@@ -301,7 +301,7 @@ class _BookAppointmentScreenState extends ConsumerState<BookAppointmentScreen> {
                   Container(
                     padding: const EdgeInsets.all(UIConstants.spacingMedium),
                     decoration: BoxDecoration(
-                      color: theme.primaryColor.withOpacity(0.1),
+                      color: theme.primaryColor.withValues(alpha: 0.1),
                       borderRadius:
                           BorderRadius.circular(UIConstants.radiusMedium),
                     ),
@@ -311,7 +311,7 @@ class _BookAppointmentScreenState extends ConsumerState<BookAppointmentScreen> {
                           width: 80,
                           height: 80,
                           decoration: BoxDecoration(
-                            color: theme.primaryColor.withOpacity(0.2),
+                            color: theme.primaryColor.withValues(alpha: 0.2),
                             borderRadius: BorderRadius.circular(
                               UIConstants.radiusMedium,
                             ),
@@ -526,9 +526,9 @@ class _BookAppointmentScreenState extends ConsumerState<BookAppointmentScreen> {
                     Container(
                       padding: const EdgeInsets.all(UIConstants.spacingMedium),
                       decoration: BoxDecoration(
-                        color: Colors.green.withOpacity(0.1),
+                        color: Colors.green.withValues(alpha: 0.1),
                         border:
-                            Border.all(color: Colors.green.withOpacity(0.3)),
+                            Border.all(color: Colors.green.withValues(alpha: 0.3)),
                         borderRadius:
                             BorderRadius.circular(UIConstants.radiusMedium),
                       ),

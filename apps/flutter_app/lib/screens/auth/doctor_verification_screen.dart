@@ -459,7 +459,7 @@ class _DoctorVerificationScreenState
 
                     // Specialization Dropdown
                     DropdownButtonFormField<String>(
-                      value: _selectedSpecialization,
+                      initialValue: _selectedSpecialization,
                       decoration: InputDecoration(
                         label: const Text('Specialization'),
                         hintText: 'Select specialization',
@@ -637,12 +637,12 @@ class _DoctorVerificationScreenState
                     Container(
                       padding: const EdgeInsets.all(UIConstants.spacingMedium),
                       decoration: BoxDecoration(
-                        color: Colors.blue.withOpacity(0.05),
+                        color: Colors.blue.withValues(alpha: 0.05),
                         borderRadius: BorderRadius.circular(
                           UIConstants.radiusMedium,
                         ),
                         border: Border.all(
-                          color: Colors.blue.withOpacity(0.2),
+                          color: Colors.blue.withValues(alpha: 0.2),
                         ),
                       ),
                       child: Column(
@@ -736,15 +736,15 @@ class _DoctorVerificationScreenState
                                   ),
                                   decoration: BoxDecoration(
                                     color: _documentsUploaded
-                                        ? Colors.green.withOpacity(0.1)
-                                        : Colors.blue.withOpacity(0.1),
+                                        ? Colors.green.withValues(alpha: 0.1)
+                                        : Colors.blue.withValues(alpha: 0.1),
                                     borderRadius: BorderRadius.circular(
                                       UIConstants.radiusSmall,
                                     ),
                                     border: Border.all(
                                       color: _documentsUploaded
-                                          ? Colors.green.withOpacity(0.3)
-                                          : Colors.blue.withOpacity(0.3),
+                                          ? Colors.green.withValues(alpha: 0.3)
+                                          : Colors.blue.withValues(alpha: 0.3),
                                     ),
                                   ),
                                   child: Row(
@@ -870,12 +870,12 @@ class _DoctorVerificationScreenState
                               padding: const EdgeInsets.all(
                                   UIConstants.spacingSmall),
                               decoration: BoxDecoration(
-                                color: Colors.green.withOpacity(0.1),
+                                color: Colors.green.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(
                                   UIConstants.radiusSmall,
                                 ),
                                 border: Border.all(
-                                  color: Colors.green.withOpacity(0.3),
+                                  color: Colors.green.withValues(alpha: 0.3),
                                 ),
                               ),
                               child: Row(
@@ -922,12 +922,12 @@ class _DoctorVerificationScreenState
                         padding:
                             const EdgeInsets.all(UIConstants.spacingMedium),
                         decoration: BoxDecoration(
-                          color: Colors.orange.withOpacity(0.1),
+                          color: Colors.orange.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(
                             UIConstants.radiusMedium,
                           ),
                           border: Border.all(
-                            color: Colors.orange.withOpacity(0.3),
+                            color: Colors.orange.withValues(alpha: 0.3),
                           ),
                         ),
                         child: Row(
@@ -956,7 +956,7 @@ class _DoctorVerificationScreenState
                     Container(
                       padding: const EdgeInsets.all(UIConstants.spacingMedium),
                       decoration: BoxDecoration(
-                        color: theme.primaryColor.withOpacity(0.1),
+                          color: theme.primaryColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(
                           UIConstants.radiusMedium,
                         ),

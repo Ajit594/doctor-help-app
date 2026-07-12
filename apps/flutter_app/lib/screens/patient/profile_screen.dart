@@ -288,7 +288,7 @@ class _PatientProfileScreenState extends ConsumerState<PatientProfileScreen> {
                             width: 120,
                             height: 120,
                             decoration: BoxDecoration(
-                              color: theme.primaryColor.withOpacity(0.1),
+                              color: theme.primaryColor.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(
                                 UIConstants.radiusLarge,
                               ),
@@ -314,7 +314,7 @@ class _PatientProfileScreenState extends ConsumerState<PatientProfileScreen> {
                               width: 120,
                               height: 120,
                               decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(0.4),
+                                color: Colors.black.withValues(alpha: 0.4),
                                 borderRadius: BorderRadius.circular(
                                   UIConstants.radiusLarge,
                                 ),

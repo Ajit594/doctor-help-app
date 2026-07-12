@@ -391,7 +391,7 @@ class _AppointmentCard extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(UIConstants.spacingMedium),
             decoration: BoxDecoration(
-              color: _getStatusColor().withOpacity(0.1),
+              color: _getStatusColor().withValues(alpha: 0.1),
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(UIConstants.radiusMedium),
                 topRight: Radius.circular(UIConstants.radiusMedium),

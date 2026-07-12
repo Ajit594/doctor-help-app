@@ -320,7 +320,7 @@ class _NotificationTile extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: UIConstants.spacingMedium),
       decoration: BoxDecoration(
         color:
-            notification.isRead ? Colors.white : Colors.blue.withOpacity(0.05),
+            notification.isRead ? Colors.white : Colors.blue.withValues(alpha: 0.05),
         border: Border.all(
           color: notification.isRead ? Colors.grey[200]! : Colors.blue[200]!,
         ),
@@ -424,7 +424,7 @@ class _NotificationTile extends StatelessWidget {
             notif_model.NotificationTypeLabel.getLabel(notification.type),
             style: const TextStyle(fontSize: 11),
           ),
-          backgroundColor: _getTypeColor().withOpacity(0.2),
+          backgroundColor: _getTypeColor().withValues(alpha: 0.2),
           labelStyle: TextStyle(
             color: _getTypeColor(),
             fontWeight: FontWeight.w600,
@@ -445,7 +445,7 @@ class _NotificationTile extends StatelessWidget {
   Widget _buildIcon(notif_model.IconMapping iconMapping) {
     return Container(
       decoration: BoxDecoration(
-        color: _getTypeColor().withOpacity(0.1),
+        color: _getTypeColor().withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(UIConstants.radiusSmall),
       ),
       padding: const EdgeInsets.all(8),

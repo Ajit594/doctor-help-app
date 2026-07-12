@@ -34,7 +34,7 @@ class DoctorCard extends StatelessWidget {
               : Border.all(color: Colors.grey[200]!),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 8,
               offset: const Offset(0, 2),
             )
@@ -52,7 +52,7 @@ class DoctorCard extends StatelessWidget {
                   backgroundImage: doctor.photoUrl != null
                       ? NetworkImage(doctor.photoUrl!)
                       : null,
-                  backgroundColor: theme.primaryColor.withOpacity(0.2),
+                  backgroundColor: theme.primaryColor.withValues(alpha: 0.2),
                   child: doctor.photoUrl == null
                       ? Icon(
                           Icons.person,

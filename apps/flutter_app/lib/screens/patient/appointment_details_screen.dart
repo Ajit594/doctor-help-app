@@ -135,7 +135,7 @@ class AppointmentDetailsScreen extends StatelessWidget {
                             vertical: 2,
                           ),
                           decoration: BoxDecoration(
-                            color: paymentColor.withOpacity(0.12),
+                            color: paymentColor.withValues(alpha: 0.12),
                             borderRadius:
                                 BorderRadius.circular(UIConstants.radiusRound),
                           ),

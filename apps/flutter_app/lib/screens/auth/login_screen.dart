@@ -101,7 +101,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               vertical: UIConstants.spacingXSmall,
                             ),
                             decoration: BoxDecoration(
-                              color: theme.primaryColor.withOpacity(0.08),
+                              color: theme.primaryColor.withValues(alpha: 0.08),
                               borderRadius: BorderRadius.circular(
                                 UIConstants.radiusRound,
                               ),
@@ -141,11 +141,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           UIConstants.radiusXLarge,
                         ),
                         border: Border.all(
-                          color: Colors.black.withOpacity(0.05),
+                          color: Colors.black.withValues(alpha: 0.05),
                         ),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.04),
+                            color: Colors.black.withValues(alpha: 0.04),
                             blurRadius: 18,
                             offset: const Offset(0, 8),
                           ),
@@ -219,11 +219,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     width: double.infinity,
                     padding: const EdgeInsets.all(UIConstants.spacingMedium),
                     decoration: BoxDecoration(
-                      color: theme.primaryColor.withOpacity(0.06),
+                      color: theme.primaryColor.withValues(alpha: 0.06),
                       borderRadius:
                           BorderRadius.circular(UIConstants.radiusLarge),
                       border: Border.all(
-                        color: theme.primaryColor.withOpacity(0.15),
+                        color: theme.primaryColor.withValues(alpha: 0.15),
                       ),
                     ),
                     child: Row(

@@ -37,9 +37,9 @@ class _LabDashboardScreenState extends ConsumerState<LabDashboardScreen> {
     return Container(
       padding: const EdgeInsets.all(UIConstants.spacingMedium),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.08),
+        color: color.withValues(alpha: 0.08),
         borderRadius: BorderRadius.circular(UIConstants.radiusMedium),
-        border: Border.all(color: color.withOpacity(0.25)),
+        border: Border.all(color: color.withValues(alpha: 0.25)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

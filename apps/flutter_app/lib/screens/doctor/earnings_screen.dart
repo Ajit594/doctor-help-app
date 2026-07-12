@@ -49,7 +49,7 @@ class _DoctorEarningsScreenState extends ConsumerState<DoctorEarningsScreen> {
                   gradient: LinearGradient(
                     colors: [
                       theme.primaryColor,
-                      theme.primaryColor.withOpacity(0.8),
+                      theme.primaryColor.withValues(alpha: 0.8),
                     ],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
@@ -373,7 +373,7 @@ class _DoctorEarningsScreenState extends ConsumerState<DoctorEarningsScreen> {
                 Container(
                   height: (120 * fraction).clamp(4, 120),
                   decoration: BoxDecoration(
-                    color: theme.primaryColor.withOpacity(0.8),
+                    color: theme.primaryColor.withValues(alpha: 0.8),
                     borderRadius: BorderRadius.circular(4),
                   ),
                 ),
@@ -496,7 +496,7 @@ class _TransactionItem extends StatelessWidget {
         children: [
           // Icon
           CircleAvatar(
-            backgroundColor: amountColor.withOpacity(0.1),
+            backgroundColor: amountColor.withValues(alpha: 0.1),
             child: Icon(
               isWithdrawal ? Icons.account_balance_wallet : Icons.trending_up,
               color: amountColor,

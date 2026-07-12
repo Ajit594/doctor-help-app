@@ -228,7 +228,7 @@ class _LabOrderDetailsScreenState extends ConsumerState<LabOrderDetailsScreen> {
                               vertical: 6,
                             ),
                             decoration: BoxDecoration(
-                              color: theme.primaryColor.withOpacity(0.1),
+                              color: theme.primaryColor.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(999),
                             ),
                             child: Text(
@@ -274,11 +274,11 @@ class _LabOrderDetailsScreenState extends ConsumerState<LabOrderDetailsScreen> {
                           padding:
                               const EdgeInsets.all(UIConstants.spacingMedium),
                           decoration: BoxDecoration(
-                            color: Colors.red.withOpacity(0.08),
+                            color: Colors.red.withValues(alpha: 0.08),
                             borderRadius:
                                 BorderRadius.circular(UIConstants.radiusMedium),
                             border:
-                                Border.all(color: Colors.red.withOpacity(0.2)),
+                                Border.all(color: Colors.red.withValues(alpha: 0.2)),
                           ),
                           child: Row(
                             children: [
@@ -319,7 +319,7 @@ class _LabOrderDetailsScreenState extends ConsumerState<LabOrderDetailsScreen> {
                                     height: 20,
                                     decoration: BoxDecoration(
                                       shape: BoxShape.circle,
-                                      color: color.withOpacity(0.14),
+                                      color: color.withValues(alpha: 0.14),
                                       border:
                                           Border.all(color: color, width: 2),
                                     ),

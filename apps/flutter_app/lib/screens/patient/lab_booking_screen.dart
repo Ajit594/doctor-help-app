@@ -290,7 +290,7 @@ class _LabBookingScreenState extends ConsumerState<LabBookingScreen> {
             ),
             const SizedBox(height: UIConstants.spacingSmall),
             DropdownButtonFormField<String>(
-              value: _gender,
+              initialValue: _gender,
               decoration: const InputDecoration(labelText: 'Gender'),
               items: const <DropdownMenuItem<String>>[
                 DropdownMenuItem(value: 'male', child: Text('Male')),

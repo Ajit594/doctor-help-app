@@ -600,7 +600,7 @@ class _LabOrderCardState extends ConsumerState<_LabOrderCard> {
           border: Border.all(color: Colors.grey[200]!),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -614,7 +614,7 @@ class _LabOrderCardState extends ConsumerState<_LabOrderCard> {
                 vertical: UIConstants.spacingSmall,
               ),
               decoration: BoxDecoration(
-                color: statusColor.withOpacity(0.1),
+                color: statusColor.withValues(alpha: 0.1),
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(UIConstants.radiusMedium),
                   topRight: Radius.circular(UIConstants.radiusMedium),
@@ -652,7 +652,7 @@ class _LabOrderCardState extends ConsumerState<_LabOrderCard> {
                         width: 50,
                         height: 50,
                         decoration: BoxDecoration(
-                          color: theme.primaryColor.withOpacity(0.1),
+                          color: theme.primaryColor.withValues(alpha: 0.1),
                           borderRadius:
                               BorderRadius.circular(UIConstants.radiusMedium),
                         ),
@@ -700,10 +700,10 @@ class _LabOrderCardState extends ConsumerState<_LabOrderCard> {
                         vertical: 6,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.red.withOpacity(0.08),
+                        color: Colors.red.withValues(alpha: 0.08),
                         borderRadius:
                             BorderRadius.circular(UIConstants.radiusSmall),
-                        border: Border.all(color: Colors.red.withOpacity(0.2)),
+                        border: Border.all(color: Colors.red.withValues(alpha: 0.2)),
                       ),
                       child: Text(
                         'Timeline: Cancelled',
@@ -968,7 +968,7 @@ class _AppointmentCard extends StatelessWidget {
           border: Border.all(color: Colors.grey[200]!),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -983,7 +983,7 @@ class _AppointmentCard extends StatelessWidget {
                 vertical: UIConstants.spacingSmall,
               ),
               decoration: BoxDecoration(
-                color: statusColor.withOpacity(0.1),
+                color: statusColor.withValues(alpha: 0.1),
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(UIConstants.radiusMedium),
                   topRight: Radius.circular(UIConstants.radiusMedium),
@@ -1027,7 +1027,7 @@ class _AppointmentCard extends StatelessWidget {
                         width: 50,
                         height: 50,
                         decoration: BoxDecoration(
-                          color: theme.primaryColor.withOpacity(0.1),
+                          color: theme.primaryColor.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(
                             UIConstants.radiusMedium,
                           ),
@@ -1103,7 +1103,7 @@ class _AppointmentCard extends StatelessWidget {
                           vertical: 2,
                         ),
                         decoration: BoxDecoration(
-                          color: paymentColor.withOpacity(0.12),
+                          color: paymentColor.withValues(alpha: 0.12),
                           borderRadius:
                               BorderRadius.circular(UIConstants.radiusRound),
                         ),

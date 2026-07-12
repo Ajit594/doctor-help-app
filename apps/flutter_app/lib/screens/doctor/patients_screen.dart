@@ -287,7 +287,7 @@ class _PatientCard extends StatelessWidget {
             // Patient Avatar
             CircleAvatar(
               radius: 28,
-              backgroundColor: theme.primaryColor.withOpacity(0.2),
+              backgroundColor: theme.primaryColor.withValues(alpha: 0.2),
               child: Icon(
                 Icons.person,
                 color: theme.primaryColor,
@@ -342,7 +342,7 @@ class _PatientCard extends StatelessWidget {
                 vertical: 6,
               ),
               decoration: BoxDecoration(
-                color: Colors.blue.withOpacity(0.1),
+                color: Colors.blue.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(4),
               ),
               child: Column(

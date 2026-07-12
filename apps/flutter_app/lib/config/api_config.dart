@@ -3,8 +3,8 @@ import 'package:flutter/foundation.dart';
 /// API Configuration
 class ApiConfig {
   // Base URL - Change based on environment
-    // Debug builds default to the Android emulator host so local backend testing works
-    // without extra flags. Override with --dart-define=API_URL=... when needed.
+  // Debug builds default to the Android emulator host so local backend testing works
+  // without extra flags. Override with --dart-define=API_URL=... when needed.
   static const String baseUrl = 'https://doctorhelp.in/api';
 
   // API Timeouts
@@ -16,20 +16,20 @@ class ApiConfig {
 
   /// Get API URL from environment or use default
   static String getBaseUrl() {
-        const envUrl = String.fromEnvironment(
+    const envUrl = String.fromEnvironment(
       'API_URL',
-            defaultValue: '',
+      defaultValue: '',
     );
 
-        if (envUrl.isNotEmpty) {
-            return envUrl;
-        }
+    if (envUrl.isNotEmpty) {
+      return envUrl;
+    }
 
-        if (debugMode) {
-            return 'http://10.0.2.2:3001/api';
-        }
+    if (debugMode) {
+      return 'http://10.0.2.2:3001/api';
+    }
 
-        return baseUrl;
+    return baseUrl;
   }
 }
 

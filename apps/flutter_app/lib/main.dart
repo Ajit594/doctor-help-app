@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'config/api_config.dart';
@@ -49,14 +50,18 @@ class _AppBootstrapState extends State<AppBootstrap> {
         timeout: const Duration(seconds: 8),
       );
 
-      debugPrint(
-        '[BOOT] startup completed in ${overall.elapsedMilliseconds}ms',
-      );
+      if (kDebugMode) {
+        debugPrint(
+          '[BOOT] startup completed in ${overall.elapsedMilliseconds}ms',
+        );
+      }
 
       if (!mounted) return;
       setState(() => _isReady = true);
     } catch (e) {
-      debugPrint('[BOOT] startup failed: $e');
+      if (kDebugMode) {
+        debugPrint('[BOOT] startup failed: $e');
+      }
       if (!mounted) return;
       setState(() {
         _error = e.toString();
@@ -70,7 +75,9 @@ class _AppBootstrapState extends State<AppBootstrap> {
     required Duration timeout,
   }) async {
     final sw = Stopwatch()..start();
-    debugPrint('[BOOT] $label started');
+    if (kDebugMode) {
+      debugPrint('[BOOT] $label started');
+    }
 
     await action().timeout(
       timeout,
@@ -79,7 +86,9 @@ class _AppBootstrapState extends State<AppBootstrap> {
       },
     );
 
-    debugPrint('[BOOT] $label finished in ${sw.elapsedMilliseconds}ms');
+    if (kDebugMode) {
+      debugPrint('[BOOT] $label finished in ${sw.elapsedMilliseconds}ms');
+    }
   }
 
   Future<void> _apiPreflight() async {
@@ -90,15 +99,17 @@ class _AppBootstrapState extends State<AppBootstrap> {
       throw FormatException('Invalid API base URL: $baseUrl');
     }
 
-    debugPrint(
-      '[BOOT] API => scheme=${uri.scheme}, host=${uri.host}, port=${uri.hasPort ? uri.port : 'default'}, path=${uri.path}',
-    );
+    if (kDebugMode) {
+      debugPrint(
+        '[BOOT] API => scheme=${uri.scheme}, host=${uri.host}, port=${uri.hasPort ? uri.port : 'default'}, path=${uri.path}',
+      );
+    }
 
     final host = uri.host.toLowerCase();
     final isLocalHost =
         host == 'localhost' || host == '127.0.0.1' || host == '10.0.2.2';
 
-    if (!ApiConfig.debugMode && isLocalHost) {
+    if (kDebugMode && !ApiConfig.debugMode && isLocalHost) {
       debugPrint(
         '[BOOT][WARN] Release mode is using local API host ($host). Check API_URL env configuration.',
       );

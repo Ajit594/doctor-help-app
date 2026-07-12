@@ -24,8 +24,10 @@ const REVIEW_OTP_PAIRS = process.env.REVIEW_OTP_PAIRS || '';
 const REVIEW_OTP_MOBILE = process.env.REVIEW_OTP_MOBILE || '';
 const REVIEW_OTP_VALUE = process.env.REVIEW_OTP_VALUE || '112233';
 
+const isDevelopment = process.env.NODE_ENV === 'development';
+
 // Debug: Log reviewer OTP config at startup
-if (process.env.NODE_ENV === 'development') {
+if (isDevelopment) {
     console.info('🔍 DEBUG: Reviewer OTP Config', {
         REVIEW_OTP_ENABLED,
         REVIEW_OTP_MOBILE,
@@ -108,11 +110,13 @@ export const sendOtpController = async (req: Request, res: Response) => {
         let smsSent = false;
         if (OTP_DEV_MODE || isReviewOtpRequest) {
             smsSent = true;
-            console.info(
-                isReviewOtpRequest
-                    ? `REVIEW_OTP enabled. Skipping SMS send for ${normalizedMobile}`
-                    : `OTP_DEV_MODE enabled. Skipping SMS send for ${normalizedMobile}`
-            );
+            if (isDevelopment) {
+                console.info(
+                    isReviewOtpRequest
+                        ? `REVIEW_OTP enabled. Skipping SMS send for ${normalizedMobile}`
+                        : `OTP_DEV_MODE enabled. Skipping SMS send for ${normalizedMobile}`
+                );
+            }
         } else {
             smsSent = await sendOTP(normalizedMobile, otp);
             if (!smsSent) {
@@ -137,8 +141,8 @@ export const sendOtpController = async (req: Request, res: Response) => {
                 expiresAt,
                 cooldown: OTP_COOLDOWN_SECONDS,
             },
-            // Expose debug OTP during development, dev fallback mode, or when REVIEW_OTP is used
-            debug_otp: (process.env.NODE_ENV === 'development' || OTP_DEV_MODE || isReviewOtpRequest) ? otp : undefined,
+            // Expose debug OTP only in development or dev fallback mode.
+            debug_otp: (isDevelopment || OTP_DEV_MODE) ? otp : undefined,
         });
     } catch (error) {
         console.error('sendOtpController error:', error);
@@ -158,7 +162,7 @@ export const verifyOtpController = async (req: Request, res: Response) => {
         const isReviewOtpRequest = !!reviewOtpValue && otp === reviewOtpValue;
 
         // Debug: Log reviewer OTP matching on every request in development
-        if (process.env.NODE_ENV === 'development') {
+        if (isDevelopment) {
             console.info('🔍 DEBUG: verifyOtp request', {
                 incomingMobile: mobile,
                 normalizedMobile,
@@ -183,7 +187,7 @@ export const verifyOtpController = async (req: Request, res: Response) => {
 
         await Otp.deleteMany({ mobile: normalizedMobile });
 
-        if (isReviewOtpRequest) {
+        if (isReviewOtpRequest && isDevelopment) {
             console.info(`REVIEW_OTP enabled. Verifying bypass OTP for ${normalizedMobile}`);
         }
 

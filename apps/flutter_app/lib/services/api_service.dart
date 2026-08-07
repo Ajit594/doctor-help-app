@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import '../config/api_config.dart';
@@ -263,6 +264,8 @@ class ApiService {
     String endpoint, {
     required String filePath,
     required String fieldName,
+    Uint8List? fileBytes,
+    String? fileName,
     Map<String, String>? additionalFields,
     T Function(Map<String, dynamic>)? fromJson,
   }) async {
@@ -290,9 +293,19 @@ class ApiService {
 
         request.headers['Authorization'] = 'Bearer $_token';
 
-        request.files.add(
-          await http.MultipartFile.fromPath(fieldName, filePath),
-        );
+        if (fileBytes != null) {
+          request.files.add(
+            http.MultipartFile.fromBytes(
+              fieldName,
+              fileBytes,
+              filename: fileName ?? filePath.split(RegExp(r'[\\/]')).last,
+            ),
+          );
+        } else {
+          request.files.add(
+            await http.MultipartFile.fromPath(fieldName, filePath),
+          );
+        }
 
         if (additionalFields != null) {
           request.fields.addAll(additionalFields);

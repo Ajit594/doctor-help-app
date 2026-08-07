@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import '../config/api_config.dart';
 import '../models/lab.dart';
 import 'api_service.dart';
@@ -79,16 +81,22 @@ class LabService {
     return response.data;
   }
 
-  Future<String?> uploadPrescription(String filePath) async {
+  Future<String?> uploadPrescription(
+    String filePath, {
+    Uint8List? fileBytes,
+    String? fileName,
+  }) async {
     final response = await _apiService.uploadFile<String>(
       ApiEndpoints.uploadLabPrescription,
       filePath: filePath,
       fieldName: 'prescription',
+      fileBytes: fileBytes,
+      fileName: fileName,
       fromJson: (json) => (json['url'] ?? '').toString(),
     );
 
     if (!response.success || response.data == null || response.data!.isEmpty) {
-      return null;
+      throw Exception(response.error ?? 'Failed to upload prescription');
     }
 
     return response.data;

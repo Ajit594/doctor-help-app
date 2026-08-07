@@ -111,38 +111,52 @@ class _LabBookingScreenState extends ConsumerState<LabBookingScreen> {
   }
 
   Future<void> _pickAndUploadPrescription() async {
+    final messenger = ScaffoldMessenger.of(context);
     final picked = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: <String>['jpg', 'jpeg', 'png', 'pdf', 'webp'],
-      withData: false,
+      withData: true,
     );
 
-    final path = picked?.files.single.path;
-    if (path == null || path.isEmpty) return;
+    final file = picked?.files.single;
+    final path = file?.path;
+    final bytes = file?.bytes;
+    if ((path == null || path.isEmpty) && bytes == null) {
+      messenger.showSnackBar(
+        const SnackBar(content: Text('Please choose a valid prescription file')),
+      );
+      return;
+    }
 
     setState(() {
       _uploadingPrescription = true;
     });
 
-    final uploadedUrl =
-        await ref.read(labServiceProvider).uploadPrescription(path);
+    try {
+      final uploadedUrl = await ref.read(labServiceProvider).uploadPrescription(
+            path ?? file?.name ?? 'prescription',
+            fileBytes: bytes,
+            fileName: file?.name,
+          );
 
-    if (!mounted) return;
-    setState(() {
-      _uploadingPrescription = false;
-      _prescriptionUrl = uploadedUrl;
-    });
+      if (!mounted) return;
+      setState(() {
+        _uploadingPrescription = false;
+        _prescriptionUrl = uploadedUrl;
+      });
 
-    if (uploadedUrl == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to upload prescription')),
+      messenger.showSnackBar(
+        const SnackBar(content: Text('Prescription uploaded successfully')),
       );
-      return;
+    } catch (e) {
+      if (!mounted) return;
+      setState(() {
+        _uploadingPrescription = false;
+      });
+      messenger.showSnackBar(
+        SnackBar(content: Text(e.toString().replaceFirst('Exception: ', ''))),
+      );
     }
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Prescription uploaded successfully')),
-    );
   }
 
   Future<void> _bookLabOrder() async {

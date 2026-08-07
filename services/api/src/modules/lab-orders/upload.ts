@@ -10,8 +10,11 @@ const UPLOAD_TIMEOUT = 30_000;
 const PRESCRIPTION_MAX_SIZE = 10 * 1024 * 1024;
 const PRESCRIPTION_MIME_TYPES = [
     'image/jpeg',
+    'image/jpg',
     'image/png',
     'image/webp',
+    'image/heic',
+    'image/heif',
     'application/pdf',
     'application/octet-stream',
 ];

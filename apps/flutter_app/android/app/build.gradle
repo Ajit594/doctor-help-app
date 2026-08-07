@@ -17,12 +17,18 @@ android {
     compileSdk = 36
     ndkVersion = flutter.ndkVersion
 
-    packaging {
-        jniLibs {
-            // Prevent stripDebugDebugSymbols failures on low-resource Windows setups.
-            keepDebugSymbols += ["**/*.so"]
-        }
-    }
+    // NOTE: `keepDebugSymbols` was added to attempt to prevent symbol-strip failures
+    // on some Windows setups, but it interferes with Flutter's post-build symbol
+    // handling and can cause the appbundle step to fail with "failed to strip
+    // debug symbols from native libraries". Commenting it out to allow Flutter
+    // to manage native symbol stripping normally. If you later need this behavior
+    // reintroduce it cautiously and verify on CI environments.
+    // packaging {
+    //     jniLibs {
+    //         // Prevent stripDebugDebugSymbols failures on low-resource Windows setups.
+    //         keepDebugSymbols += ["**/*.so"]
+    //     }
+    // }
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -39,10 +45,18 @@ android {
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = 24
-        // Play now requires targeting API 35+.
-        targetSdk = 35
+        // Play policy issue requires Android 16 / API 36 or higher.
+        targetSdk = 36
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        // NOTE: ABI filtering was previously added to reduce bundle size, but
+        // it conflicts with Flutter's `--split-per-abi` output. Commenting it
+        // out to allow building per-ABI APKs for local sideload testing.
+        // If you prefer to keep ABI filtering for the AAB, re-enable this
+        // block later and avoid using --split-per-abi.
+        // ndk {
+        //     abiFilters += ["armeabi-v7a", "arm64-v8a"]
+        // }
     }
 
     signingConfigs {
@@ -60,6 +74,11 @@ android {
         release {
             // Use upload keystore for Play Store release.
             signingConfig = keystorePropertiesFile.exists() ? signingConfigs.release : signingConfigs.debug
+            // Enable code shrinking and resource shrinking to reduce bundle size.
+            // R8 will be used for minification; provide a proguard rules file.
+            minifyEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 }

@@ -78,14 +78,18 @@ class _VerifyOtpScreenState extends ConsumerState<VerifyOtpScreen> {
 
     if (success) {
       _startCooldownTimer();
-      showOtpResultSnackBar(context, null, onRetry: null, success: true, successMessage: 'OTP resent successfully');
+      showOtpResultSnackBar(context, null,
+          onRetry: null,
+          success: true,
+          successMessage: 'OTP resent successfully');
     } else {
       final error = ref.read(authStateProvider).error;
       // Keep explicit cooldown handling first
       if (error != null && error.toLowerCase().contains('wait')) {
         showOtpResultSnackBar(context, error, onRetry: null, success: false);
       } else {
-        showOtpResultSnackBar(context, error, onRetry: _handleResendOtp, success: false);
+        showOtpResultSnackBar(context, error,
+            onRetry: _handleResendOtp, success: false);
       }
     }
   }

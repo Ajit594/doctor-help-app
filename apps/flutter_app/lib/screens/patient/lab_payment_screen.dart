@@ -162,7 +162,8 @@ class _LabPaymentScreenState extends ConsumerState<LabPaymentScreen> {
       setState(() => _isPaying = false);
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Error: ${e.toString().replaceFirst('Exception: ', '')}'),
+          content:
+              Text('Error: ${e.toString().replaceFirst('Exception: ', '')}'),
           backgroundColor: Colors.red,
         ),
       );
@@ -359,7 +360,8 @@ class _LabPaymentScreenState extends ConsumerState<LabPaymentScreen> {
                       child: RadioListTile<String>(
                         value: 'upi',
                         title: Text('UPI'),
-                        subtitle: Text('Pay using any UPI app (Google Pay, PhonePe, etc.)'),
+                        subtitle: Text(
+                            'Pay using any UPI app (Google Pay, PhonePe, etc.)'),
                         contentPadding: EdgeInsets.symmetric(
                           horizontal: UIConstants.spacingMedium,
                           vertical: UIConstants.spacingSmall,
@@ -371,7 +373,8 @@ class _LabPaymentScreenState extends ConsumerState<LabPaymentScreen> {
                       child: RadioListTile<String>(
                         value: 'card',
                         title: Text('Credit / Debit Card'),
-                        subtitle: Text('Visa, Mastercard, or other supported cards'),
+                        subtitle:
+                            Text('Visa, Mastercard, or other supported cards'),
                         contentPadding: EdgeInsets.symmetric(
                           horizontal: UIConstants.spacingMedium,
                           vertical: UIConstants.spacingSmall,

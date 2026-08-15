@@ -19,7 +19,8 @@ class AuthService {
     if (!hasConnection) {
       return const ApiResponse<Map<String, dynamic>>(
         success: false,
-        error: 'No internet connection. Please check your network and try again.',
+        error:
+            'No internet connection. Please check your network and try again.',
       );
     }
 

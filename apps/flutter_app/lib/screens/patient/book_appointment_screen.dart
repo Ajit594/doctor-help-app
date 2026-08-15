@@ -526,8 +526,8 @@ class _BookAppointmentScreenState extends ConsumerState<BookAppointmentScreen> {
                       padding: const EdgeInsets.all(UIConstants.spacingMedium),
                       decoration: BoxDecoration(
                         color: Colors.green.withValues(alpha: 0.1),
-                        border:
-                            Border.all(color: Colors.green.withValues(alpha: 0.3)),
+                        border: Border.all(
+                            color: Colors.green.withValues(alpha: 0.3)),
                         borderRadius:
                             BorderRadius.circular(UIConstants.radiusMedium),
                       ),

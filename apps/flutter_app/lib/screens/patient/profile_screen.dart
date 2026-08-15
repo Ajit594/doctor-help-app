@@ -296,7 +296,8 @@ class _PatientProfileScreenState extends ConsumerState<PatientProfileScreen> {
                               image: user?.avatar != null &&
                                       user!.avatar!.isNotEmpty
                                   ? DecorationImage(
-                                      image: CachedNetworkImageProvider(user.avatar!),
+                                      image: CachedNetworkImageProvider(
+                                          user.avatar!),
                                       fit: BoxFit.cover,
                                     )
                                   : null,

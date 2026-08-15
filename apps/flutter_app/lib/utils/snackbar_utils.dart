@@ -22,7 +22,8 @@ void showOtpResultSnackBar(
   final lower = msg.toLowerCase();
 
   // No internet
-  if (lower.contains('no internet') || lower.contains('network is unreachable')) {
+  if (lower.contains('no internet') ||
+      lower.contains('network is unreachable')) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('No internet connection. Please check your network.'),
@@ -34,7 +35,9 @@ void showOtpResultSnackBar(
   }
 
   // Cooldown / wait messages
-  if (lower.contains('wait') || lower.contains('too many requests') || lower.contains('please try again later')) {
+  if (lower.contains('wait') ||
+      lower.contains('too many requests') ||
+      lower.contains('please try again later')) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(msg),
@@ -45,7 +48,9 @@ void showOtpResultSnackBar(
   }
 
   // Generic network error — allow retry
-  if (lower.contains('network error') || lower.contains('socketexception') || lower.contains('request timeout')) {
+  if (lower.contains('network error') ||
+      lower.contains('socketexception') ||
+      lower.contains('request timeout')) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
         content: Text('Network error. Please try again.'),

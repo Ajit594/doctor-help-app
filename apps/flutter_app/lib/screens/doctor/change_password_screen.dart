@@ -62,9 +62,13 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
 
       if (result.success) {
         setState(() => _otpSent = true);
-        showOtpResultSnackBar(context, null, onRetry: null, success: true, successMessage: 'OTP sent to your new number');
+        showOtpResultSnackBar(context, null,
+            onRetry: null,
+            success: true,
+            successMessage: 'OTP sent to your new number');
       } else {
-        showOtpResultSnackBar(context, result.error, onRetry: _sendOtp, success: false);
+        showOtpResultSnackBar(context, result.error,
+            onRetry: _sendOtp, success: false);
       }
     } catch (e) {
       if (!mounted) return;

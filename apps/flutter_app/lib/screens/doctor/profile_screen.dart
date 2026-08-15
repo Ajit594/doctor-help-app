@@ -548,7 +548,8 @@ class _DoctorProfileScreenState extends ConsumerState<DoctorProfileScreen> {
 
                   // Specialization Dropdown
                   DropdownButtonFormField<String>(
-                    initialValue: _normalizeSpecialization(_selectedSpecialization),
+                    initialValue:
+                        _normalizeSpecialization(_selectedSpecialization),
                     items: specializations
                         .map((spec) => DropdownMenuItem(
                               value: spec,
@@ -636,7 +637,8 @@ class _DoctorProfileScreenState extends ConsumerState<DoctorProfileScreen> {
                                 Positioned.fill(
                                   child: Container(
                                     decoration: BoxDecoration(
-                                      color: Colors.black.withValues(alpha: 0.4),
+                                      color:
+                                          Colors.black.withValues(alpha: 0.4),
                                       shape: BoxShape.circle,
                                     ),
                                     child: const Center(

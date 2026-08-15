@@ -123,7 +123,8 @@ class _LabBookingScreenState extends ConsumerState<LabBookingScreen> {
     final bytes = file?.bytes;
     if ((path == null || path.isEmpty) && bytes == null) {
       messenger.showSnackBar(
-        const SnackBar(content: Text('Please choose a valid prescription file')),
+        const SnackBar(
+            content: Text('Please choose a valid prescription file')),
       );
       return;
     }
@@ -180,7 +181,7 @@ class _LabBookingScreenState extends ConsumerState<LabBookingScreen> {
         .where((t) => _selectedTestIds.contains(t.id))
         .map((t) => t.name)
         .toList();
-    
+
     final packageNames = _catalog!.packages
         .where((p) => _selectedPackageIds.contains(p.id))
         .map((p) => p.name)

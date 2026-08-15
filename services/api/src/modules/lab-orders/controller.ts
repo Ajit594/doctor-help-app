@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import mongoose from 'mongoose';
-import { Lab, LabTest, LabPackage, LabOrder } from '../../models';
+import { Lab, LabTest, LabPackage, LabOrder, Payment } from '../../models';
 import { AuthenticatedRequest } from '../../middleware/auth';
 import { PAGINATION } from '../../utils/pagination';
 import { canTransition } from './status-flow';
@@ -19,6 +19,7 @@ export const createLabOrder = async (req: Request, res: Response) => {
         }
 
         const {
+            paymentId,
             labId,
             testIds = [],
             packageIds = [],
@@ -29,6 +30,13 @@ export const createLabOrder = async (req: Request, res: Response) => {
             homeCollection,
             address,
         } = req.body;
+
+        if (typeof paymentId !== 'string' || paymentId.trim().length < 5) {
+            return res.status(400).json({
+                success: false,
+                error: 'Payment is required before booking confirmation',
+            });
+        }
 
         if (!mongoose.isValidObjectId(labId)) {
             return res.status(400).json({ success: false, error: 'Invalid lab id' });
@@ -77,6 +85,45 @@ export const createLabOrder = async (req: Request, res: Response) => {
         const items = [...testItems, ...packageItems];
         const amount = items.reduce((sum, item) => sum + item.price, 0);
 
+        const payment = await Payment.findOne({ paymentId: paymentId.trim() }).lean();
+        if (!payment) {
+            return res.status(404).json({
+                success: false,
+                error: 'Payment not found. Please complete payment and try again',
+            });
+        }
+
+        if (payment.userId !== userId) {
+            return res.status(403).json({
+                success: false,
+                error: 'Payment does not belong to this user',
+            });
+        }
+
+        if (payment.status !== 'success') {
+            return res.status(400).json({
+                success: false,
+                error: 'Payment not completed. Please complete payment before booking',
+            });
+        }
+
+        const amountMismatch = Math.abs(payment.amount - amount) > 0.01;
+        if (amountMismatch) {
+            return res.status(400).json({
+                success: false,
+                error: 'Payment amount does not match selected tests/packages',
+            });
+        }
+
+        const existingOrderForPayment = await LabOrder.findOne({ paymentId: payment.paymentId }).lean();
+        if (existingOrderForPayment) {
+            return res.status(409).json({
+                success: false,
+                error: 'This payment has already been used for a lab booking',
+                data: existingOrderForPayment,
+            });
+        }
+
         const preparationInstructions = Array.from(new Set([
             ...tests.flatMap((test) => test.preparationInstructions || []),
             ...packages.flatMap((pkg) => pkg.preparationInstructions || []),
@@ -100,6 +147,8 @@ export const createLabOrder = async (req: Request, res: Response) => {
         const order = await LabOrder.create({
             userId,
             labId,
+            paymentId: payment.paymentId,
+            paymentTxnId: payment.providerTxnId,
             patientProfile,
             items,
             prescriptionUrl,
@@ -109,7 +158,7 @@ export const createLabOrder = async (req: Request, res: Response) => {
             homeCollection,
             address,
             amount,
-            status: 'created',
+            status: 'confirmed',
         });
 
         const populated = await LabOrder.findById(order._id)
@@ -124,7 +173,7 @@ export const createLabOrder = async (req: Request, res: Response) => {
 
         return res.status(201).json({
             success: true,
-            message: 'Lab order created successfully',
+            message: 'Payment successful. Lab order confirmed',
             data: populated,
         });
     } catch (error) {

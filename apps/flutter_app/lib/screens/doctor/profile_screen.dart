@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -618,7 +619,9 @@ class _DoctorProfileScreenState extends ConsumerState<DoctorProfileScreen> {
                                 backgroundImage:
                                     doctorProfile?.photoUrl != null &&
                                             doctorProfile!.photoUrl!.isNotEmpty
-                                        ? NetworkImage(doctorProfile.photoUrl!)
+                                        ? CachedNetworkImageProvider(
+                                            doctorProfile.photoUrl!,
+                                          )
                                         : null,
                                 child: doctorProfile?.photoUrl != null &&
                                         doctorProfile!.photoUrl!.isNotEmpty
@@ -1073,10 +1076,10 @@ class DocumentViewerScreen extends StatelessWidget {
             if (isImage) {
               return InteractiveViewer(
                 child: Center(
-                  child: Image.network(
-                    documentUrl,
+                  child: CachedNetworkImage(
+                    imageUrl: documentUrl,
                     fit: BoxFit.contain,
-                    errorBuilder: (_, __, ___) => const Text(
+                    errorWidget: (_, __, ___) => const Text(
                       'Failed to load image',
                     ),
                   ),

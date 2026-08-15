@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -99,16 +100,14 @@ class _DoctorProfileScreenState extends ConsumerState<DoctorProfileScreen> {
                                   borderRadius: BorderRadius.circular(
                                     UIConstants.radiusLarge,
                                   ),
-                                  child: Image.network(
-                                    doctor.photoUrl!,
+                                  child: CachedNetworkImage(
+                                    imageUrl: doctor.photoUrl!,
                                     fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return Icon(
-                                        Icons.person,
-                                        size: 60,
-                                        color: theme.primaryColor,
-                                      );
-                                    },
+                                    errorWidget: (context, url, error) => Icon(
+                                      Icons.person,
+                                      size: 60,
+                                      color: theme.primaryColor,
+                                    ),
                                   ),
                                 )
                               : Icon(
@@ -511,7 +510,7 @@ class _ReviewCard extends StatelessWidget {
                 radius: 16,
                 backgroundColor: theme.primaryColor.withValues(alpha: 0.1),
                 backgroundImage: review.patientId.avatar != null
-                    ? NetworkImage(review.patientId.avatar!)
+                    ? CachedNetworkImageProvider(review.patientId.avatar!)
                     : null,
                 child: review.patientId.avatar == null
                     ? Icon(Icons.person, size: 18, color: theme.primaryColor)

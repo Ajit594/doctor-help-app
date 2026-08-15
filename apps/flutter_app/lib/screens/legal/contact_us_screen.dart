@@ -35,14 +35,14 @@ class ContactUsScreen extends StatelessWidget {
             _buildContactCard(
               theme,
               '📧 Email Support',
-              'General Inquiries:  Support@doctorhelp.in\n'
-                  'Refunds: Support@doctorhelp.in\n',
+              'General Inquiries:  support@doctorhelp.in\n'
+                  'Refunds: support@doctorhelp.in\n',
             ),
             _buildContactCard(
               theme,
               '📞 Phone Support',
-              'Toll-Free: +91-8603-342-657\n'
-                  'Hours: 24/7 (All days)',
+              'Phone: +91-8603342657\n'
+                  'Hours: Monday–Friday 09:00–17:00',
             ),
             _buildContactCard(
               theme,
@@ -53,9 +53,7 @@ class ContactUsScreen extends StatelessWidget {
             _buildContactCard(
               theme,
               '📍 Business Address',
-              'DoctorHelp Healthcare Platform\n'
-                  'FORBESGANJ BHAGKOHALIA WARD NO 7 MITHILA COLONY\n'
-                  'FORBESGANJ, BIHAR - 854318\n'
+              'Mithila Colony, Ward No 07, Bhagkohaliya, Forbesganj, Araria, Bihar, 854318\n'
                   'India',
             ),
             _buildContactCard(

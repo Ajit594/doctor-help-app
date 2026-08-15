@@ -29,6 +29,8 @@ export interface ILabOrderItem {
 export interface ILabOrder extends Document {
     userId: string;
     labId: Types.ObjectId;
+    paymentId?: string;
+    paymentTxnId?: string;
     patientProfile: ILabOrderPatientProfile;
     items: ILabOrderItem[];
     prescriptionUrl?: string;
@@ -65,6 +67,8 @@ export interface ILabOrder extends Document {
 const LabOrderSchema = new Schema<ILabOrder>({
     userId: { type: String, required: true, index: true },
     labId: { type: Schema.Types.ObjectId, ref: 'Lab', required: true },
+    paymentId: { type: String, trim: true, index: true },
+    paymentTxnId: { type: String, trim: true },
     patientProfile: {
         name: { type: String, required: true, trim: true },
         age: { type: Number, required: true, min: 0, max: 120 },
@@ -127,6 +131,7 @@ const LabOrderSchema = new Schema<ILabOrder>({
 LabOrderSchema.index({ userId: 1, createdAt: -1 });
 LabOrderSchema.index({ labId: 1, status: 1, slotDate: 1 });
 LabOrderSchema.index({ status: 1, createdAt: -1 });
+LabOrderSchema.index({ paymentId: 1 }, { sparse: true });
 LabOrderSchema.index({ 'adminOverride.isEscalated': 1, status: 1, createdAt: -1 });
 
 export const LabOrder = mongoose.model<ILabOrder>('LabOrder', LabOrderSchema);

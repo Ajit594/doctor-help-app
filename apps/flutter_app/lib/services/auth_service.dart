@@ -1,20 +1,62 @@
+import 'dart:async';
+
 import '../models/user.dart';
 import '../models/api_response.dart';
 import '../config/api_config.dart';
 import 'api_service.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 /// Auth API Service
 class AuthService {
   final ApiService _apiService;
 
-  AuthService(this._apiService);
+  const AuthService(this._apiService);
 
   /// Send OTP to phone number
-  Future<ApiResponse<Map<String, dynamic>>> sendOtp(String phone) {
-    return _apiService.post(
-      ApiEndpoints.sendOtp,
-      body: {'mobile': phone},
-    );
+  Future<ApiResponse<Map<String, dynamic>>> sendOtp(String phone) async {
+    // Quick connectivity guard to fail fast on offline devices
+    final hasConnection = await InternetConnectionChecker().hasConnection;
+    if (!hasConnection) {
+      return const ApiResponse<Map<String, dynamic>>(
+        success: false,
+        error: 'No internet connection. Please check your network and try again.',
+      );
+    }
+
+    // Retry with exponential backoff for transient socket errors
+    const int maxAttempts = 3;
+    int attempt = 0;
+    int delayMs = 500;
+
+    while (true) {
+      attempt++;
+      try {
+        final resp = await _apiService.post<Map<String, dynamic>>(
+          ApiEndpoints.sendOtp,
+          body: {'mobile': phone},
+          fromJson: (m) => m,
+        );
+
+        // If the call succeeded or returned a non-network error, return it directly
+        if (resp.success || attempt >= maxAttempts) return resp;
+
+        // Otherwise, wait and retry
+        await Future.delayed(Duration(milliseconds: delayMs));
+        delayMs *= 2;
+      } catch (e) {
+        // If this was the last attempt, return structured error
+        if (attempt >= maxAttempts) {
+          return ApiResponse<Map<String, dynamic>>(
+            success: false,
+            error:
+                'Network error while sending OTP. Please try again shortly. (${e.toString()})',
+          );
+        }
+
+        await Future.delayed(Duration(milliseconds: delayMs));
+        delayMs *= 2;
+      }
+    }
   }
 
   /// Verify OTP and get token

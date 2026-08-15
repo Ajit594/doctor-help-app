@@ -5,6 +5,7 @@ import '../../widgets/app_button.dart';
 import '../../widgets/app_text_field.dart';
 import '../../widgets/app_logo.dart';
 import '../../providers/providers.dart';
+import '../../utils/snackbar_utils.dart';
 import '../../utils/validators.dart';
 import '../../navigation/app_router.dart';
 import '../../config/constants.dart';
@@ -55,12 +56,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       context.push('${AppRoutes.verifyOtp}?phone=${_phoneController.text}');
     } else {
       final error = ref.read(authStateProvider).error;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(error ?? 'Failed to send OTP'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      showOtpResultSnackBar(context, error,
+          onRetry: _handleSendOtp, success: false);
     }
   }
 

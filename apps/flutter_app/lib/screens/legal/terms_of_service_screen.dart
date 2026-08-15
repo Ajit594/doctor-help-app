@@ -100,11 +100,21 @@ class TermsOfServiceScreen extends StatelessWidget {
             ),
             _buildSection(
               theme,
+              'Grievance Officer',
+              'Name of the Office: Doctor Help\n'
+                  'Designation: Proprietor\n'
+                  'Name and Address of the Company: DOCTOR HELP, Mithila Colony, Ward No 07,\n'
+                  'Bhagkohaliya, Forbesganj, Araria, Bihar, 854318\n'
+                  'Contact us: support@doctorhelp.in / 8603342657\n'
+                  'Phone Time: Monday - Friday (9:00 - 17:00)',
+            ),
+            _buildSection(
+              theme,
               '11. Contact Us',
               'For questions about these Terms, contact us at:\n'
                   'Email: support@doctorhelp.in\n'
-                  'Phone: +91-8603-342-657\n'
-                  'Address: Forbesganj, Bihar, India',
+                  'Phone: +91-8603342657\n'
+                  'Address: Mithila Colony, Ward No 07, Bhagkohaliya, Forbesganj, Araria, Bihar, 854318',
             ),
             const SizedBox(height: UIConstants.spacing2XLarge),
           ],

@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../config/constants.dart';
 import '../../models/lab.dart';
 import '../../providers/providers.dart';
+import 'lab_payment_screen.dart';
 
 class LabBookingScreen extends ConsumerStatefulWidget {
   final String labId;
@@ -29,7 +30,6 @@ class _LabBookingScreenState extends ConsumerState<LabBookingScreen> {
   final _addressController = TextEditingController();
 
   bool _loading = true;
-  bool _submitting = false;
   bool _uploadingPrescription = false;
   bool _homeCollection = true;
   String _gender = 'male';
@@ -168,14 +168,35 @@ class _LabBookingScreenState extends ConsumerState<LabBookingScreen> {
       return;
     }
 
-    setState(() {
-      _submitting = true;
-    });
+    if (_totalAmount <= 0) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Total amount must be greater than zero')),
+      );
+      return;
+    }
 
-    final order = await ref.read(labServiceProvider).createLabOrder(
+    // Get test and package names for display
+    final testNames = _catalog!.tests
+        .where((t) => _selectedTestIds.contains(t.id))
+        .map((t) => t.name)
+        .toList();
+    
+    final packageNames = _catalog!.packages
+        .where((p) => _selectedPackageIds.contains(p.id))
+        .map((p) => p.name)
+        .toList();
+
+    if (!mounted) return;
+
+    // Navigate to payment screen with booking details
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => LabPaymentScreen(
           labId: widget.labId,
-          testIds: _selectedTestIds.toList(),
-          packageIds: _selectedPackageIds.toList(),
+          labName: _catalog!.lab.name,
+          amount: _totalAmount,
+          selectedTestIds: _selectedTestIds.toList(),
+          selectedPackageIds: _selectedPackageIds.toList(),
           patientName: _nameController.text.trim(),
           patientAge: int.parse(_ageController.text.trim()),
           patientGender: _gender,
@@ -187,25 +208,11 @@ class _LabBookingScreenState extends ConsumerState<LabBookingScreen> {
           slotTime: _slotTimeController.text.trim(),
           homeCollection: _homeCollection,
           address: _addressController.text.trim(),
-        );
-
-    if (!mounted) return;
-
-    setState(() {
-      _submitting = false;
-    });
-
-    if (order == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Failed to create booking')),
-      );
-      return;
-    }
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Lab booking created successfully')),
+          testNames: testNames,
+          packageNames: packageNames,
+        ),
+      ),
     );
-    Navigator.of(context).pop();
   }
 
   @override
@@ -445,14 +452,8 @@ class _LabBookingScreenState extends ConsumerState<LabBookingScreen> {
             ),
             const SizedBox(height: UIConstants.spacingLarge),
             ElevatedButton(
-              onPressed: _submitting ? null : _bookLabOrder,
-              child: _submitting
-                  ? const SizedBox(
-                      width: 18,
-                      height: 18,
-                      child: CircularProgressIndicator(strokeWidth: 2),
-                    )
-                  : const Text('Confirm Booking'),
+              onPressed: _bookLabOrder,
+              child: const Text('Confirm Booking & Proceed to Payment'),
             ),
           ],
         ),

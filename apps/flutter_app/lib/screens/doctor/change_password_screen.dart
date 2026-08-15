@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../config/constants.dart';
 import '../../providers/providers.dart';
+import '../../utils/snackbar_utils.dart';
 
 /// Since the app uses phone-based OTP authentication (no passwords),
 /// this screen shows account security info and allows the user to
@@ -61,19 +62,9 @@ class _ChangePasswordScreenState extends ConsumerState<ChangePasswordScreen> {
 
       if (result.success) {
         setState(() => _otpSent = true);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('OTP sent to your new number'),
-            backgroundColor: Colors.green,
-          ),
-        );
+        showOtpResultSnackBar(context, null, onRetry: null, success: true, successMessage: 'OTP sent to your new number');
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(result.error ?? 'Failed to send OTP'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        showOtpResultSnackBar(context, result.error, onRetry: _sendOtp, success: false);
       }
     } catch (e) {
       if (!mounted) return;

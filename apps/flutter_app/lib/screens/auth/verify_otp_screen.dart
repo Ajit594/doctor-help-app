@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../widgets/app_button.dart';
 import '../../widgets/app_text_field.dart';
 import '../../providers/providers.dart';
+import '../../utils/snackbar_utils.dart';
 import '../../utils/validators.dart';
 import '../../navigation/app_router.dart';
 import '../../config/constants.dart';
@@ -77,29 +78,14 @@ class _VerifyOtpScreenState extends ConsumerState<VerifyOtpScreen> {
 
     if (success) {
       _startCooldownTimer();
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('OTP resent successfully'),
-          backgroundColor: Colors.green,
-        ),
-      );
+      showOtpResultSnackBar(context, null, onRetry: null, success: true, successMessage: 'OTP resent successfully');
     } else {
       final error = ref.read(authStateProvider).error;
-      // Check if it's a cooldown error from backend
-      if (error != null && error.contains('wait')) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(error),
-            backgroundColor: Colors.orange,
-          ),
-        );
+      // Keep explicit cooldown handling first
+      if (error != null && error.toLowerCase().contains('wait')) {
+        showOtpResultSnackBar(context, error, onRetry: null, success: false);
       } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(error ?? 'Failed to resend OTP'),
-            backgroundColor: Colors.red,
-          ),
-        );
+        showOtpResultSnackBar(context, error, onRetry: _handleResendOtp, success: false);
       }
     }
   }

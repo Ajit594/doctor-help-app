@@ -8,18 +8,23 @@ class PaymentService {
   PaymentService(this._apiService);
 
   Future<ApiResponse<Map<String, dynamic>>> initiateDemoPayment({
-    required String appointmentId,
+    String? appointmentId,
     required double amount,
     String purpose = 'doctor_consultation',
   }) {
+    final body = <String, dynamic>{
+      'amount': amount,
+      'currency': 'INR',
+      'purpose': purpose,
+    };
+
+    if (appointmentId != null && appointmentId.trim().isNotEmpty) {
+      body['appointmentId'] = appointmentId.trim();
+    }
+
     return _apiService.post(
       ApiEndpoints.initiatePayment,
-      body: {
-        'appointmentId': appointmentId,
-        'amount': amount,
-        'currency': 'INR',
-        'purpose': purpose,
-      },
+      body: body,
       fromJson: (json) => json,
     );
   }

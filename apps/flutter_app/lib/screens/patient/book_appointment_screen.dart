@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -321,16 +322,14 @@ class _BookAppointmentScreenState extends ConsumerState<BookAppointmentScreen> {
                                   borderRadius: BorderRadius.circular(
                                     UIConstants.radiusMedium,
                                   ),
-                                  child: Image.network(
-                                    doctor.photoUrl!,
+                                  child: CachedNetworkImage(
+                                    imageUrl: doctor.photoUrl!,
                                     fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return Icon(
-                                        Icons.person,
-                                        size: 40,
-                                        color: theme.primaryColor,
-                                      );
-                                    },
+                                    errorWidget: (context, url, error) => Icon(
+                                      Icons.person,
+                                      size: 40,
+                                      color: theme.primaryColor,
+                                    ),
                                   ),
                                 )
                               : Icon(

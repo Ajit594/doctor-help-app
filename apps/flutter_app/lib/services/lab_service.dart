@@ -103,6 +103,7 @@ class LabService {
   }
 
   Future<LabOrder?> createLabOrder({
+    required String paymentId,
     required String labId,
     required List<String> testIds,
     required List<String> packageIds,
@@ -119,6 +120,7 @@ class LabService {
     final response = await _apiService.post<LabOrder>(
       ApiEndpoints.createLabOrder,
       body: {
+        'paymentId': paymentId,
         'labId': labId,
         'testIds': testIds,
         'packageIds': packageIds,

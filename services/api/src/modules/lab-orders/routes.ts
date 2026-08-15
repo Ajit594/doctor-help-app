@@ -10,6 +10,7 @@ const objectIdSchema = z.string().regex(/^[0-9a-fA-F]{24}$/, 'Invalid ObjectId')
 
 const createLabOrderSchema = z.object({
     body: z.object({
+        paymentId: z.string().min(5),
         labId: objectIdSchema,
         testIds: z.array(objectIdSchema).optional().default([]),
         packageIds: z.array(objectIdSchema).optional().default([]),

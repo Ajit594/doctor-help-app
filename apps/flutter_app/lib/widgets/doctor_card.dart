@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import '../models/doctor.dart';
 import '../config/constants.dart';
@@ -50,7 +51,7 @@ class DoctorCard extends StatelessWidget {
                 CircleAvatar(
                   radius: 30,
                   backgroundImage: doctor.photoUrl != null
-                      ? NetworkImage(doctor.photoUrl!)
+                      ? CachedNetworkImageProvider(doctor.photoUrl!)
                       : null,
                   backgroundColor: theme.primaryColor.withValues(alpha: 0.2),
                   child: doctor.photoUrl == null

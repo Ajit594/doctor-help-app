@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -295,7 +296,7 @@ class _PatientProfileScreenState extends ConsumerState<PatientProfileScreen> {
                               image: user?.avatar != null &&
                                       user!.avatar!.isNotEmpty
                                   ? DecorationImage(
-                                      image: NetworkImage(user.avatar!),
+                                      image: CachedNetworkImageProvider(user.avatar!),
                                       fit: BoxFit.cover,
                                     )
                                   : null,

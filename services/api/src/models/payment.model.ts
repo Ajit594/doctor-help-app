@@ -1,6 +1,6 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
-export type PaymentProvider = 'demo' | 'phonepe';
+export type PaymentProvider = 'demo' | 'cashfree';
 export type PaymentStatus = 'created' | 'pending' | 'success' | 'failed' | 'refunded';
 
 export interface IPayment extends Document {
@@ -9,6 +9,8 @@ export interface IPayment extends Document {
     appointmentId?: string;
     provider: PaymentProvider;
     providerTxnId?: string;
+    cfOrderId?: string;
+    paymentSessionId?: string;
     amount: number;
     currency: string;
     status: PaymentStatus;
@@ -20,11 +22,13 @@ export interface IPayment extends Document {
 
 const PaymentSchema = new Schema<IPayment>(
     {
-        paymentId: { type: String, required: true, unique: true, index: true },
+        paymentId: { type: String, required: true, unique: true },
         userId: { type: String, required: true, index: true },
         appointmentId: { type: String, index: true },
-        provider: { type: String, enum: ['demo', 'phonepe'], default: 'demo', required: true },
+        provider: { type: String, enum: ['demo', 'cashfree'], default: 'demo', required: true },
         providerTxnId: { type: String, trim: true, index: true },
+        cfOrderId: { type: String, trim: true, index: true },
+        paymentSessionId: { type: String, trim: true },
         amount: { type: Number, required: true, min: 1 },
         currency: { type: String, default: 'INR', required: true },
         status: {

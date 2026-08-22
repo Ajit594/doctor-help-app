@@ -8,6 +8,7 @@ export * from './lab-test.model';
 export * from './lab-package.model';
 export * from './lab-order.model';
 export * from './payment.model';
+export * from './payment-webhook-event.model';
 export * from './admin-audit-log.model';
 export * from './lab-registration-request.model';
 export * from './notification-preference.model';

@@ -30,6 +30,16 @@ import { labRegistrationRouter } from './modules/lab-registration/routes';
 import { paymentsRouter } from './modules/payments/routes';
 import { labProviderRouter } from './modules/lab-provider/routes';
 import { notificationsRouter } from './modules/notifications/routes';
+import { paymentsWebhookRouter } from './modules/payments/webhook-routes';
+
+declare global {
+    namespace Express {
+        interface Request {
+            /** Raw request body bytes, captured for webhook signature verification (see express.json below). */
+            rawBody?: Buffer;
+        }
+    }
+}
 
 const app = express();
 const PORT = Number(process.env.PORT || 3001);
@@ -85,7 +95,11 @@ app.use(cors({
 
 app.use(compression());
 app.use(morgan('dev'));
-app.use(express.json());
+app.use(express.json({
+    verify: (req, _res, buf) => {
+        (req as express.Request).rawBody = buf;
+    },
+}));
 
 // Rate limiting
 const limiter = rateLimit({
@@ -127,6 +141,7 @@ app.use('/api/labs', labsRouter);
 app.use('/api/lab-orders', labOrdersRouter);
 app.use('/api/lab-orders', labOrderUploadRouter);
 app.use('/api/lab-registrations', labRegistrationRouter);
+app.use('/api/payments/webhook', paymentsWebhookRouter);
 app.use('/api/payments', paymentsRouter);
 app.use('/api/lab-provider', labProviderRouter);
 app.use('/api/notifications', notificationsRouter);

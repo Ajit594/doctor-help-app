@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../config/constants.dart';
 import '../../navigation/app_router.dart';
 import '../../providers/providers.dart';
+import '../../services/cashfree_checkout_helper.dart';
 import '../../widgets/app_button.dart';
 
 class PaymentScreen extends ConsumerStatefulWidget {
@@ -25,36 +26,16 @@ class PaymentScreen extends ConsumerStatefulWidget {
 
 class _PaymentScreenState extends ConsumerState<PaymentScreen> {
   bool _isPaying = false;
-  String _selectedMethod = 'upi';
 
-  Future<void> _handlePay() async {
-    setState(() => _isPaying = true);
-
-    final paymentService = ref.read(paymentServiceProvider);
-    final response = await paymentService.initiateDemoPayment(
-      appointmentId: widget.appointmentId,
-      amount: widget.amount,
+  void _showError(String message) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), backgroundColor: Colors.red),
     );
+  }
 
+  Future<void> _showSuccessDialog(String transactionId) async {
     if (!mounted) return;
-    setState(() => _isPaying = false);
-
-    if (!response.success || response.data == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(response.error ?? 'Payment failed. Please try again.'),
-          backgroundColor: Colors.red,
-        ),
-      );
-      return;
-    }
-
-    final transactionId = response.data!['transactionId']?.toString() ??
-        response.data!['paymentId']?.toString() ??
-        'DEMO-TXN';
-
-    if (!mounted) return;
-
     await showDialog<void>(
       context: context,
       barrierDismissible: false,
@@ -72,9 +53,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
         ),
         actions: [
           ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
+            onPressed: () => Navigator.of(context).pop(),
             child: const Text('Done'),
           ),
         ],
@@ -83,6 +62,100 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
 
     if (!mounted) return;
     context.go(AppRoutes.patientBookings);
+  }
+
+  /// Bounded poll for a webhook-confirmed final status after the SDK checkout
+  /// completes — the SDK's own success callback isn't proof of a server-confirmed
+  /// payment, only the backend (via webhook or this live check) is.
+  Future<String> _pollForConfirmedStatus(String paymentId) async {
+    final paymentService = ref.read(paymentServiceProvider);
+    for (var attempt = 0; attempt < 5; attempt++) {
+      final statusResponse = await paymentService.getPaymentStatus(paymentId, live: true);
+      final status = statusResponse.data?['status']?.toString();
+      if (status == 'success' || status == 'failed') {
+        return status!;
+      }
+      await Future.delayed(const Duration(seconds: 2));
+    }
+    return 'pending';
+  }
+
+  Future<void> _handlePay() async {
+    setState(() => _isPaying = true);
+
+    final paymentService = ref.read(paymentServiceProvider);
+    final response = await paymentService.initiatePayment(
+      appointmentId: widget.appointmentId,
+      amount: widget.amount,
+    );
+
+    if (!mounted) return;
+
+    if (!response.success || response.data == null) {
+      setState(() => _isPaying = false);
+      _showError(response.error ?? 'Payment failed. Please try again.');
+      return;
+    }
+
+    final data = response.data!;
+    final status = data['status']?.toString();
+    final mode = data['mode']?.toString();
+    final paymentId = data['paymentId']?.toString();
+
+    // Already paid (short-circuit) or an instant demo-mode success.
+    if (status == 'success') {
+      setState(() => _isPaying = false);
+      final transactionId = data['transactionId']?.toString() ?? paymentId ?? 'TXN';
+      await _showSuccessDialog(transactionId);
+      return;
+    }
+
+    if (mode == 'cashfree') {
+      final cashfree = data['cashfree'] as Map<String, dynamic>?;
+      if (cashfree == null || paymentId == null) {
+        setState(() => _isPaying = false);
+        _showError('Payment could not be started. Please try again.');
+        return;
+      }
+
+      final checkoutResult = await CashfreeCheckoutHelper().launchCheckout(
+        orderId: cashfree['orderId'].toString(),
+        paymentSessionId: cashfree['paymentSessionId'].toString(),
+        environment: cashfree['environment'].toString(),
+      );
+
+      if (!mounted) return;
+
+      if (!checkoutResult.success) {
+        setState(() => _isPaying = false);
+        _showError(checkoutResult.errorMessage ?? 'Payment was not completed.');
+        return;
+      }
+
+      final finalStatus = await _pollForConfirmedStatus(paymentId);
+      if (!mounted) return;
+      setState(() => _isPaying = false);
+
+      if (finalStatus == 'success') {
+        await _showSuccessDialog(paymentId);
+      } else if (finalStatus == 'failed') {
+        _showError('Payment failed. Please try again.');
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text(
+              'Payment is still processing. We\'ll notify you once it\'s confirmed — check My Bookings shortly.',
+            ),
+            backgroundColor: Colors.orange,
+          ),
+        );
+        context.go(AppRoutes.patientBookings);
+      }
+      return;
+    }
+
+    setState(() => _isPaying = false);
+    _showError('Unexpected payment response. Please try again.');
   }
 
   @override
@@ -130,42 +203,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
               ),
               const SizedBox(height: UIConstants.spacing2XLarge),
               Text(
-                'Select Payment Method',
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: UIConstants.spacingMedium),
-              RadioGroup<String>(
-                groupValue: _selectedMethod,
-                onChanged: (value) {
-                  if (value != null) {
-                    setState(() => _selectedMethod = value);
-                  }
-                },
-                child: const Column(
-                  children: [
-                    RadioListTile<String>(
-                      value: 'upi',
-                      title: Text('UPI'),
-                      subtitle: Text('Pay using any UPI app'),
-                    ),
-                    RadioListTile<String>(
-                      value: 'card',
-                      title: Text('Card'),
-                      subtitle: Text('Credit / Debit Card'),
-                    ),
-                    RadioListTile<String>(
-                      value: 'netbanking',
-                      title: Text('Net Banking'),
-                      subtitle: Text('All major banks supported'),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: UIConstants.spacing2XLarge),
-              Text(
-                'Demo Note: This flow simulates gateway success for approval and testing.',
+                'Tap Pay to open secure checkout and choose UPI, card, or net banking.',
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: Colors.grey[600],
                 ),

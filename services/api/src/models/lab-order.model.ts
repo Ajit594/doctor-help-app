@@ -67,7 +67,7 @@ export interface ILabOrder extends Document {
 const LabOrderSchema = new Schema<ILabOrder>({
     userId: { type: String, required: true, index: true },
     labId: { type: Schema.Types.ObjectId, ref: 'Lab', required: true },
-    paymentId: { type: String, trim: true, index: true },
+    paymentId: { type: String, trim: true },
     paymentTxnId: { type: String, trim: true },
     patientProfile: {
         name: { type: String, required: true, trim: true },

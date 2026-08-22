@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../config/constants.dart';
 import '../../navigation/app_router.dart';
 import '../../providers/providers.dart';
+import '../../services/cashfree_checkout_helper.dart';
 import '../../widgets/app_button.dart';
 
 class LabPaymentScreen extends ConsumerStatefulWidget {
@@ -51,122 +52,168 @@ class LabPaymentScreen extends ConsumerStatefulWidget {
 
 class _LabPaymentScreenState extends ConsumerState<LabPaymentScreen> {
   bool _isPaying = false;
-  String _selectedMethod = 'upi';
+
+  void _showError(String message) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), backgroundColor: Colors.red),
+    );
+  }
+
+  /// Bounded poll for a webhook-confirmed final status after the SDK checkout
+  /// completes — the SDK's own success callback isn't proof of a server-confirmed
+  /// payment, only the backend (via webhook or this live check) is. The lab order
+  /// itself can only be created once this reaches 'success' (backend enforces it too).
+  Future<String> _pollForConfirmedStatus(String paymentId) async {
+    final paymentService = ref.read(paymentServiceProvider);
+    for (var attempt = 0; attempt < 5; attempt++) {
+      final statusResponse = await paymentService.getPaymentStatus(paymentId, live: true);
+      final status = statusResponse.data?['status']?.toString();
+      if (status == 'success' || status == 'failed') {
+        return status!;
+      }
+      await Future.delayed(const Duration(seconds: 2));
+    }
+    return 'pending';
+  }
+
+  Future<void> _createOrderAndShowSuccess(String paymentId, String transactionId) async {
+    final labService = ref.read(labServiceProvider);
+    final order = await labService.createLabOrder(
+      paymentId: paymentId,
+      labId: widget.labId,
+      testIds: widget.selectedTestIds,
+      packageIds: widget.selectedPackageIds,
+      patientName: widget.patientName,
+      patientAge: widget.patientAge,
+      patientGender: widget.patientGender,
+      relationship: widget.relationship,
+      prescriptionUrl: widget.prescriptionUrl,
+      slotDate: widget.slotDate,
+      slotTime: widget.slotTime,
+      homeCollection: widget.homeCollection,
+      address: widget.address,
+    );
+
+    if (!mounted) return;
+
+    if (order == null) {
+      _showError('Payment succeeded but booking creation failed. Contact support with your transaction ID.');
+      return;
+    }
+
+    await showDialog<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => AlertDialog(
+        title: const Text('Payment Successful'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text('Lab booking confirmed successfully.'),
+            const SizedBox(height: UIConstants.spacingSmall),
+            Text('Txn ID: $transactionId'),
+            Text('Amount: ₹${widget.amount.toStringAsFixed(0)}'),
+            const SizedBox(height: UIConstants.spacingSmall),
+            Text('Lab: ${widget.labName}'),
+          ],
+        ),
+        actions: [
+          ElevatedButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Done'),
+          ),
+        ],
+      ),
+    );
+
+    if (!mounted) return;
+    context.go(AppRoutes.patientBookings);
+  }
 
   Future<void> _handlePay() async {
     setState(() => _isPaying = true);
 
     try {
       final paymentService = ref.read(paymentServiceProvider);
-      final paymentResponse = await paymentService.initiateDemoPayment(
+      final paymentResponse = await paymentService.initiatePayment(
         amount: widget.amount,
         purpose: 'lab_booking',
       );
 
       if (!mounted) return;
-      setState(() => _isPaying = false);
 
       if (!paymentResponse.success || paymentResponse.data == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              paymentResponse.error ?? 'Payment failed. Please try again.',
+        setState(() => _isPaying = false);
+        _showError(paymentResponse.error ?? 'Payment failed. Please try again.');
+        return;
+      }
+
+      final data = paymentResponse.data!;
+      final status = data['status']?.toString();
+      final mode = data['mode']?.toString();
+      final paymentId = data['paymentId']?.toString();
+
+      // Instant demo-mode success.
+      if (status == 'success' && paymentId != null) {
+        final transactionId = data['transactionId']?.toString() ?? paymentId;
+        await _createOrderAndShowSuccess(paymentId, transactionId);
+        if (mounted) setState(() => _isPaying = false);
+        return;
+      }
+
+      if (mode == 'cashfree' && paymentId != null) {
+        final cashfree = data['cashfree'] as Map<String, dynamic>?;
+        if (cashfree == null) {
+          setState(() => _isPaying = false);
+          _showError('Payment could not be started. Please try again.');
+          return;
+        }
+
+        final checkoutResult = await CashfreeCheckoutHelper().launchCheckout(
+          orderId: cashfree['orderId'].toString(),
+          paymentSessionId: cashfree['paymentSessionId'].toString(),
+          environment: cashfree['environment'].toString(),
+        );
+
+        if (!mounted) return;
+
+        if (!checkoutResult.success) {
+          setState(() => _isPaying = false);
+          _showError(checkoutResult.errorMessage ?? 'Payment was not completed.');
+          return;
+        }
+
+        final finalStatus = await _pollForConfirmedStatus(paymentId);
+        if (!mounted) return;
+
+        if (finalStatus == 'success') {
+          await _createOrderAndShowSuccess(paymentId, paymentId);
+          if (mounted) setState(() => _isPaying = false);
+        } else if (finalStatus == 'failed') {
+          setState(() => _isPaying = false);
+          _showError('Payment failed. Please try again.');
+        } else {
+          setState(() => _isPaying = false);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                'Payment is still processing. Please check back in a few minutes and retry booking if it doesn\'t confirm.',
+              ),
+              backgroundColor: Colors.orange,
             ),
-            backgroundColor: Colors.red,
-          ),
-        );
+          );
+        }
         return;
       }
 
-      final paymentData = paymentResponse.data!;
-      final paymentStatus = (paymentData['status'] ?? '').toString();
-      final paymentId = (paymentData['paymentId'] ?? '').toString();
-
-      if (paymentStatus != 'success' || paymentId.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Payment not completed. Please try again.'),
-          ),
-        );
-        return;
-      }
-
-      // Create lab order after successful payment
-      final labService = ref.read(labServiceProvider);
-      final order = await labService.createLabOrder(
-        paymentId: paymentId,
-        labId: widget.labId,
-        testIds: widget.selectedTestIds,
-        packageIds: widget.selectedPackageIds,
-        patientName: widget.patientName,
-        patientAge: widget.patientAge,
-        patientGender: widget.patientGender,
-        relationship: widget.relationship,
-        prescriptionUrl: widget.prescriptionUrl,
-        slotDate: widget.slotDate,
-        slotTime: widget.slotTime,
-        homeCollection: widget.homeCollection,
-        address: widget.address,
-      );
-
-      if (!mounted) return;
-
-      if (order == null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to create booking')),
-        );
-        return;
-      }
-
-      final transactionId =
-          (paymentData['transactionId'] ?? paymentData['paymentId'] ?? '')
-              .toString();
-
-      // Show success dialog
-      if (!mounted) return;
-      await showDialog<void>(
-        context: context,
-        barrierDismissible: false,
-        builder: (context) => AlertDialog(
-          title: const Text('Payment Successful'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text('Lab booking confirmed successfully.'),
-              const SizedBox(height: UIConstants.spacingSmall),
-              if (transactionId.isNotEmpty)
-                Text('Txn ID: $transactionId')
-              else
-                const Text('Txn ID: DEMO-TXN'),
-              Text('Amount: ₹${widget.amount.toStringAsFixed(0)}'),
-              const SizedBox(height: UIConstants.spacingSmall),
-              Text('Lab: ${widget.labName}'),
-            ],
-          ),
-          actions: [
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Done'),
-            ),
-          ],
-        ),
-      );
-
-      if (!mounted) return;
-      context.go(AppRoutes.patientBookings);
+      setState(() => _isPaying = false);
+      _showError('Unexpected payment response. Please try again.');
     } catch (e) {
       if (!mounted) return;
       setState(() => _isPaying = false);
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content:
-              Text('Error: ${e.toString().replaceFirst('Exception: ', '')}'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      _showError('Error: ${e.toString().replaceFirst('Exception: ', '')}');
     }
   }
 
@@ -338,79 +385,10 @@ class _LabPaymentScreenState extends ConsumerState<LabPaymentScreen> {
                 ),
               ),
               const SizedBox(height: UIConstants.spacing2XLarge),
-
-              // Payment Method Selection
               Text(
-                'Select Payment Method',
-                style: theme.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: UIConstants.spacingMedium),
-              RadioGroup<String>(
-                groupValue: _selectedMethod,
-                onChanged: (value) {
-                  if (value != null) {
-                    setState(() => _selectedMethod = value);
-                  }
-                },
-                child: const Column(
-                  children: [
-                    Card(
-                      child: RadioListTile<String>(
-                        value: 'upi',
-                        title: Text('UPI'),
-                        subtitle: Text(
-                            'Pay using any UPI app (Google Pay, PhonePe, etc.)'),
-                        contentPadding: EdgeInsets.symmetric(
-                          horizontal: UIConstants.spacingMedium,
-                          vertical: UIConstants.spacingSmall,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: UIConstants.spacingSmall),
-                    Card(
-                      child: RadioListTile<String>(
-                        value: 'card',
-                        title: Text('Credit / Debit Card'),
-                        subtitle:
-                            Text('Visa, Mastercard, or other supported cards'),
-                        contentPadding: EdgeInsets.symmetric(
-                          horizontal: UIConstants.spacingMedium,
-                          vertical: UIConstants.spacingSmall,
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: UIConstants.spacingSmall),
-                    Card(
-                      child: RadioListTile<String>(
-                        value: 'netbanking',
-                        title: Text('Net Banking'),
-                        subtitle: Text('All major banks supported'),
-                        contentPadding: EdgeInsets.symmetric(
-                          horizontal: UIConstants.spacingMedium,
-                          vertical: UIConstants.spacingSmall,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: UIConstants.spacing2XLarge),
-
-              // Info message
-              Container(
-                padding: const EdgeInsets.all(UIConstants.spacingMedium),
-                decoration: BoxDecoration(
-                  color: Colors.blue[50],
-                  borderRadius: BorderRadius.circular(UIConstants.radiusSmall),
-                  border: Border.all(color: Colors.blue[200]!),
-                ),
-                child: Text(
-                  'Demo Mode: This flow simulates successful payment for testing and approval purposes.',
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: Colors.blue[900],
-                  ),
+                'Tap Pay to open secure checkout and choose UPI, card, or net banking.',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: Colors.grey[600],
                 ),
               ),
               const SizedBox(height: UIConstants.spacingLarge),

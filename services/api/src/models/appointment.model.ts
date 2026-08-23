@@ -1,5 +1,12 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
+export interface IAppointmentPatientProfile {
+    name: string;
+    age: number;
+    gender: 'male' | 'female' | 'other';
+    relationship?: string;
+}
+
 export interface IAppointment extends Document {
     patientId: mongoose.Types.ObjectId;
     doctorId: mongoose.Types.ObjectId;
@@ -16,6 +23,10 @@ export interface IAppointment extends Document {
     amount: number;
     paymentStatus: 'pending' | 'paid' | 'refunded';
     meetingLink?: string;
+    // Who the appointment is actually for — lets one patient account book for a family
+    // member. Optional for backward compatibility with appointments created before this field
+    // existed; falls back to the account holder when absent.
+    patientProfile?: IAppointmentPatientProfile;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -44,6 +55,12 @@ const AppointmentSchema = new Schema<IAppointment>({
         default: 'pending'
     },
     meetingLink: { type: String },
+    patientProfile: {
+        name: { type: String, trim: true },
+        age: { type: Number, min: 0, max: 120 },
+        gender: { type: String, enum: ['male', 'female', 'other'] },
+        relationship: { type: String, trim: true },
+    },
 }, { timestamps: true });
 
 // Indexes for query performance

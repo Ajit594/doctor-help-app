@@ -23,6 +23,10 @@ _$AppointmentImpl _$$AppointmentImplFromJson(Map<String, dynamic> json) =>
       amount: (json['amount'] as num?)?.toDouble() ?? 0.0,
       paymentStatus: json['paymentStatus'] as String? ?? 'pending',
       meetingLink: json['meetingLink'] as String?,
+      patientProfile: json['patientProfile'] == null
+          ? null
+          : AppointmentPatientProfile.fromJson(
+              json['patientProfile'] as Map<String, dynamic>),
       createdAt: json['createdAt'] == null
           ? null
           : DateTime.parse(json['createdAt'] as String),
@@ -43,7 +47,26 @@ Map<String, dynamic> _$$AppointmentImplToJson(_$AppointmentImpl instance) =>
       'amount': instance.amount,
       'paymentStatus': instance.paymentStatus,
       'meetingLink': instance.meetingLink,
+      'patientProfile': instance.patientProfile,
       'createdAt': instance.createdAt?.toIso8601String(),
+    };
+
+_$AppointmentPatientProfileImpl _$$AppointmentPatientProfileImplFromJson(
+        Map<String, dynamic> json) =>
+    _$AppointmentPatientProfileImpl(
+      name: json['name'] as String,
+      age: (json['age'] as num).toInt(),
+      gender: json['gender'] as String,
+      relationship: json['relationship'] as String?,
+    );
+
+Map<String, dynamic> _$$AppointmentPatientProfileImplToJson(
+        _$AppointmentPatientProfileImpl instance) =>
+    <String, dynamic>{
+      'name': instance.name,
+      'age': instance.age,
+      'gender': instance.gender,
+      'relationship': instance.relationship,
     };
 
 _$AppointmentDoctorImpl _$$AppointmentDoctorImplFromJson(
@@ -110,6 +133,10 @@ _$DoctorAppointmentImpl _$$DoctorAppointmentImplFromJson(
       prescription: json['prescription'] as String?,
       amount: (json['amount'] as num?)?.toDouble() ?? 0.0,
       paymentStatus: json['paymentStatus'] as String? ?? 'pending',
+      patientProfile: json['patientProfile'] == null
+          ? null
+          : AppointmentPatientProfile.fromJson(
+              json['patientProfile'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$DoctorAppointmentImplToJson(
@@ -127,6 +154,7 @@ Map<String, dynamic> _$$DoctorAppointmentImplToJson(
       'prescription': instance.prescription,
       'amount': instance.amount,
       'paymentStatus': instance.paymentStatus,
+      'patientProfile': instance.patientProfile,
     };
 
 _$PatientInfoImpl _$$PatientInfoImplFromJson(Map<String, dynamic> json) =>

@@ -151,6 +151,13 @@ class AppointmentDetailsScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: UIConstants.spacingSmall),
                     Text('Status: ${appointment.status}'),
+                    if (appointment.patientProfile != null) ...[
+                      const SizedBox(height: UIConstants.spacingSmall),
+                      Text(
+                        'Patient: ${appointment.patientProfile!.name}'
+                        '${appointment.patientProfile!.relationship != null && appointment.patientProfile!.relationship!.isNotEmpty ? ' (${appointment.patientProfile!.relationship})' : ''}',
+                      ),
+                    ],
                     if ((appointment.symptoms ?? '').isNotEmpty) ...[
                       const SizedBox(height: UIConstants.spacingSmall),
                       Text('Reason: ${appointment.symptoms}'),

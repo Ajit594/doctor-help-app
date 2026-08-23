@@ -20,11 +20,28 @@ class Appointment with _$Appointment {
     @Default(0.0) double amount,
     @Default('pending') String paymentStatus,
     String? meetingLink,
+    AppointmentPatientProfile? patientProfile,
     DateTime? createdAt,
   }) = _Appointment;
 
   factory Appointment.fromJson(Map<String, dynamic> json) =>
       _$AppointmentFromJson(json);
+}
+
+/// Who the appointment is actually for — lets one account book for a family member.
+/// Absent on appointments created before this field existed; UI should fall back to
+/// the account holder's name in that case.
+@freezed
+class AppointmentPatientProfile with _$AppointmentPatientProfile {
+  const factory AppointmentPatientProfile({
+    required String name,
+    required int age,
+    required String gender,
+    String? relationship,
+  }) = _AppointmentPatientProfile;
+
+  factory AppointmentPatientProfile.fromJson(Map<String, dynamic> json) =>
+      _$AppointmentPatientProfileFromJson(json);
 }
 
 /// Minimal doctor info returned in patient appointments list
@@ -77,6 +94,7 @@ class DoctorAppointment with _$DoctorAppointment {
     String? prescription,
     @Default(0.0) double amount,
     @Default('pending') String paymentStatus,
+    AppointmentPatientProfile? patientProfile,
   }) = _DoctorAppointment;
 
   factory DoctorAppointment.fromJson(Map<String, dynamic> json) =>

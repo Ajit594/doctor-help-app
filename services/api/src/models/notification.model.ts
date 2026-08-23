@@ -24,6 +24,7 @@ export interface INotification extends Document {
   isRead: boolean;
   relatedId?: string; // appointmentId, labOrderId, etc.
   relatedModel?: 'Appointment' | 'LabOrder' | 'Payment';
+  dedupeKey?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -77,6 +78,12 @@ const NotificationSchema = new Schema<INotification>(
     relatedModel: {
       type: String,
       enum: ['Appointment', 'LabOrder', 'Payment'],
+    },
+    dedupeKey: {
+      type: String,
+      unique: true,
+      sparse: true,
+      index: true,
     },
   },
   { timestamps: true }

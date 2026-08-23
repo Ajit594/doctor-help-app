@@ -41,12 +41,8 @@ mixin _$Doctor {
   List<TimeSlot> get availableSlots => throw _privateConstructorUsedError;
   DateTime? get createdAt => throw _privateConstructorUsedError;
 
-  /// Serializes this Doctor to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of Doctor
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $DoctorCopyWith<Doctor> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -88,8 +84,6 @@ class _$DoctorCopyWithImpl<$Res, $Val extends Doctor>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of Doctor
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -188,8 +182,6 @@ class _$DoctorCopyWithImpl<$Res, $Val extends Doctor>
     ) as $Val);
   }
 
-  /// Create a copy of Doctor
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $DoctorUserCopyWith<$Res> get userId {
@@ -238,8 +230,6 @@ class __$$DoctorImplCopyWithImpl<$Res>
       _$DoctorImpl _value, $Res Function(_$DoctorImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of Doctor
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -467,7 +457,7 @@ class _$DoctorImpl implements _Doctor {
                 other.createdAt == createdAt));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -490,9 +480,7 @@ class _$DoctorImpl implements _Doctor {
       const DeepCollectionEquality().hash(_availableSlots),
       createdAt);
 
-  /// Create a copy of Doctor
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$DoctorImplCopyWith<_$DoctorImpl> get copyWith =>
@@ -568,11 +556,8 @@ abstract class _Doctor implements Doctor {
   List<TimeSlot> get availableSlots;
   @override
   DateTime? get createdAt;
-
-  /// Create a copy of Doctor
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$DoctorImplCopyWith<_$DoctorImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -589,12 +574,8 @@ mixin _$DoctorUser {
   String? get phone => throw _privateConstructorUsedError;
   String? get avatar => throw _privateConstructorUsedError;
 
-  /// Serializes this DoctorUser to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of DoctorUser
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $DoctorUserCopyWith<DoctorUser> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -622,8 +603,6 @@ class _$DoctorUserCopyWithImpl<$Res, $Val extends DoctorUser>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of DoctorUser
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -676,8 +655,6 @@ class __$$DoctorUserImplCopyWithImpl<$Res>
       _$DoctorUserImpl _value, $Res Function(_$DoctorUserImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of DoctorUser
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -745,13 +722,11 @@ class _$DoctorUserImpl implements _DoctorUser {
             (identical(other.avatar, avatar) || other.avatar == avatar));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, id, name, phone, avatar);
 
-  /// Create a copy of DoctorUser
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$DoctorUserImplCopyWith<_$DoctorUserImpl> get copyWith =>
@@ -784,11 +759,8 @@ abstract class _DoctorUser implements DoctorUser {
   String? get phone;
   @override
   String? get avatar;
-
-  /// Create a copy of DoctorUser
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$DoctorUserImplCopyWith<_$DoctorUserImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -803,12 +775,8 @@ mixin _$TimeSlot {
   String get startTime => throw _privateConstructorUsedError;
   String get endTime => throw _privateConstructorUsedError;
 
-  /// Serializes this TimeSlot to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of TimeSlot
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $TimeSlotCopyWith<TimeSlot> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -831,8 +799,6 @@ class _$TimeSlotCopyWithImpl<$Res, $Val extends TimeSlot>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of TimeSlot
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -876,8 +842,6 @@ class __$$TimeSlotImplCopyWithImpl<$Res>
       _$TimeSlotImpl _value, $Res Function(_$TimeSlotImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of TimeSlot
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -934,13 +898,11 @@ class _$TimeSlotImpl implements _TimeSlot {
             (identical(other.endTime, endTime) || other.endTime == endTime));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, day, startTime, endTime);
 
-  /// Create a copy of TimeSlot
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$TimeSlotImplCopyWith<_$TimeSlotImpl> get copyWith =>
@@ -969,11 +931,8 @@ abstract class _TimeSlot implements TimeSlot {
   String get startTime;
   @override
   String get endTime;
-
-  /// Create a copy of TimeSlot
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$TimeSlotImplCopyWith<_$TimeSlotImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

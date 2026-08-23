@@ -11,7 +11,7 @@ import {
 export const createAppointment = async (req: Request, res: Response) => {
     try {
         const authReq = req as AuthenticatedRequest;
-        const { doctorId, date, timeSlot, type, symptoms } = req.body;
+        const { doctorId, date, timeSlot, type, symptoms, patientProfile } = req.body;
 
         // Use authenticated user's ID as patientId — don't trust body
         const patientId = authReq.user?.userId;
@@ -83,6 +83,7 @@ export const createAppointment = async (req: Request, res: Response) => {
                 timeSlot,
                 type,
                 symptoms,
+                patientProfile,
                 amount: doctor.consultationFee,
                 status: 'pending'
             });

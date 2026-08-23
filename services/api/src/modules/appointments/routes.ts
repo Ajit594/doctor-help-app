@@ -16,7 +16,13 @@ const createAppointmentSchema = z.object({
             end: z.string()
         }),
         type: z.enum(['video', 'clinic', 'home']),
-        symptoms: z.string().optional()
+        symptoms: z.string().optional(),
+        patientProfile: z.object({
+            name: z.string().min(1),
+            age: z.number().int().min(0).max(120),
+            gender: z.enum(['male', 'female', 'other']),
+            relationship: z.string().optional()
+        }).optional()
     })
 });
 

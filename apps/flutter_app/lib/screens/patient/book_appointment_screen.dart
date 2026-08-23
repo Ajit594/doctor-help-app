@@ -28,18 +28,27 @@ class _BookAppointmentScreenState extends ConsumerState<BookAppointmentScreen> {
 
   final reasonController = TextEditingController();
   final notesController = TextEditingController();
+  final patientNameController = TextEditingController();
+  final patientAgeController = TextEditingController();
+  final relationshipController = TextEditingController();
+  String patientGender = 'male';
 
   @override
   void initState() {
     super.initState();
     _doctorFuture =
         ref.read(doctorServiceProvider).getDoctorById(widget.doctorId);
+    // Default to the account holder — editable if booking for someone else.
+    patientNameController.text = ref.read(authStateProvider).user?.name ?? '';
   }
 
   @override
   void dispose() {
     reasonController.dispose();
     notesController.dispose();
+    patientNameController.dispose();
+    patientAgeController.dispose();
+    relationshipController.dispose();
     super.dispose();
   }
 
@@ -199,6 +208,23 @@ class _BookAppointmentScreenState extends ConsumerState<BookAppointmentScreen> {
       return;
     }
 
+    if (patientNameController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please enter the patient\'s name'),
+        ),
+      );
+      return;
+    }
+
+    final patientAge = int.tryParse(patientAgeController.text.trim());
+    if (patientAge == null || patientAge < 0 || patientAge > 120) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please enter a valid age')),
+      );
+      return;
+    }
+
     try {
       final appointmentService = ref.read(appointmentServiceProvider);
       final authState = ref.read(authStateProvider);
@@ -213,6 +239,12 @@ class _BookAppointmentScreenState extends ConsumerState<BookAppointmentScreen> {
             '${selectedTime!.hour.toString().padLeft(2, '0')}:${selectedTime!.minute.toString().padLeft(2, '0')}',
         reason: reasonController.text,
         notes: notesController.text.isNotEmpty ? notesController.text : null,
+        forPatientName: patientNameController.text.trim(),
+        forPatientAge: patientAge,
+        forPatientGender: patientGender,
+        forPatientRelationship: relationshipController.text.trim().isNotEmpty
+            ? relationshipController.text.trim()
+            : null,
       );
 
       if (!mounted) return;
@@ -473,6 +505,83 @@ class _BookAppointmentScreenState extends ConsumerState<BookAppointmentScreen> {
                             ),
                           ),
                         ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: UIConstants.spacing2XLarge),
+
+                  // Who is this appointment for
+                  Text(
+                    'Who is this appointment for?',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: UIConstants.spacingSmall),
+                  TextField(
+                    controller: patientNameController,
+                    decoration: InputDecoration(
+                      labelText: 'Patient Name',
+                      hintText: 'Name of the person being seen',
+                      border: OutlineInputBorder(
+                        borderRadius:
+                            BorderRadius.circular(UIConstants.radiusMedium),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: UIConstants.spacingMedium),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: patientAgeController,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            labelText: 'Age',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(
+                                  UIConstants.radiusMedium),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: UIConstants.spacingMedium),
+                      Expanded(
+                        child: DropdownButtonFormField<String>(
+                          initialValue: patientGender,
+                          decoration: InputDecoration(
+                            labelText: 'Gender',
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(
+                                  UIConstants.radiusMedium),
+                            ),
+                          ),
+                          items: const [
+                            DropdownMenuItem(
+                                value: 'male', child: Text('Male')),
+                            DropdownMenuItem(
+                                value: 'female', child: Text('Female')),
+                            DropdownMenuItem(
+                                value: 'other', child: Text('Other')),
+                          ],
+                          onChanged: (value) {
+                            if (value != null) {
+                              setState(() => patientGender = value);
+                            }
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: UIConstants.spacingMedium),
+                  TextField(
+                    controller: relationshipController,
+                    decoration: InputDecoration(
+                      labelText: 'Relationship (Optional)',
+                      hintText: 'e.g., Self, Spouse, Child, Parent',
+                      border: OutlineInputBorder(
+                        borderRadius:
+                            BorderRadius.circular(UIConstants.radiusMedium),
                       ),
                     ),
                   ),

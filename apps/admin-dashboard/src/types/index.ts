@@ -99,6 +99,7 @@ export interface Appointment {
     amount: number;
     paymentStatus: 'pending' | 'paid' | 'refunded';
     meetingLink?: string;
+    patientProfile?: LabOrderPatientProfile;
     createdAt: string;
     updatedAt: string;
 }

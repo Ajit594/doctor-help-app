@@ -18,6 +18,10 @@ class AppointmentService {
     required String endTime,
     required String type,
     String? symptoms,
+    String? forPatientName,
+    int? forPatientAge,
+    String? forPatientGender,
+    String? forPatientRelationship,
   }) {
     return _apiService.post(
       ApiEndpoints.createAppointment,
@@ -32,6 +36,17 @@ class AppointmentService {
         },
         'type': type,
         if (symptoms != null) 'symptoms': symptoms,
+        if (forPatientName != null &&
+            forPatientAge != null &&
+            forPatientGender != null)
+          'patientProfile': {
+            'name': forPatientName,
+            'age': forPatientAge,
+            'gender': forPatientGender,
+            if (forPatientRelationship != null &&
+                forPatientRelationship.trim().isNotEmpty)
+              'relationship': forPatientRelationship.trim(),
+          },
       },
       fromJson: (json) => Appointment.fromJson(json),
     );
@@ -130,6 +145,10 @@ class AppointmentService {
     required String reason,
     String type = 'clinic',
     String? notes,
+    String? forPatientName,
+    int? forPatientAge,
+    String? forPatientGender,
+    String? forPatientRelationship,
   }) async {
     return createAppointment(
       patientId: patientId,
@@ -139,6 +158,10 @@ class AppointmentService {
       endTime: endTime,
       type: type,
       symptoms: reason,
+      forPatientName: forPatientName,
+      forPatientAge: forPatientAge,
+      forPatientGender: forPatientGender,
+      forPatientRelationship: forPatientRelationship,
     );
   }
 

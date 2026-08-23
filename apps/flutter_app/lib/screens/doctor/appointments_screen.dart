@@ -311,7 +311,12 @@ class _AppointmentsList extends ConsumerWidget {
                   padding:
                       const EdgeInsets.only(bottom: UIConstants.spacingMedium),
                   child: _AppointmentCard(
-                    patientName: patient.name ?? 'Patient',
+                    patientName: apt.patientProfile?.name ?? patient.name ?? 'Patient',
+                    bookedByName: apt.patientProfile != null &&
+                            apt.patientProfile!.name != patient.name
+                        ? patient.name
+                        : null,
+                    relationship: apt.patientProfile?.relationship,
                     appointmentDate: dateLabel,
                     appointmentTime: timeLabel,
                     consultationType: typeLabel,
@@ -336,6 +341,8 @@ class _AppointmentsList extends ConsumerWidget {
 
 class _AppointmentCard extends StatelessWidget {
   final String patientName;
+  final String? bookedByName;
+  final String? relationship;
   final String appointmentDate;
   final String appointmentTime;
   final String consultationType;
@@ -347,6 +354,8 @@ class _AppointmentCard extends StatelessWidget {
 
   const _AppointmentCard({
     required this.patientName,
+    this.bookedByName,
+    this.relationship,
     required this.appointmentDate,
     required this.appointmentTime,
     required this.consultationType,
@@ -404,11 +413,20 @@ class _AppointmentCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      patientName,
+                      relationship != null && relationship!.isNotEmpty
+                          ? '$patientName ($relationship)'
+                          : patientName,
                       style: theme.textTheme.bodyLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                    if (bookedByName != null && bookedByName!.isNotEmpty)
+                      Text(
+                        'Booked by: $bookedByName',
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: Colors.grey[600],
+                        ),
+                      ),
                     const SizedBox(height: 4),
                     Text(
                       'Type: $consultationType',

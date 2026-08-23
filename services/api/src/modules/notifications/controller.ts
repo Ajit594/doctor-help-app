@@ -443,6 +443,9 @@ export const createNotificationInternal = async (
       return null;
     }
 
+    const dedupeKey = relatedId && relatedModel
+      ? `${userId}:${type}:${relatedModel}:${relatedId}`
+      : undefined;
     const notification = new Notification({
       userId,
       title,
@@ -450,8 +453,16 @@ export const createNotificationInternal = async (
       type,
       relatedId,
       relatedModel,
+      dedupeKey,
     });
-    await notification.save();
+    try {
+      await notification.save();
+    } catch (error: any) {
+      if (error?.code === 11000 && dedupeKey) {
+        return null;
+      }
+      throw error;
+    }
 
     notificationSseHub.emitToUser(userId, 'notification.created', {
       notification: toClientNotification(notification),

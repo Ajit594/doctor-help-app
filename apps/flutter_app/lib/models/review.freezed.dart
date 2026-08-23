@@ -29,12 +29,8 @@ mixin _$Review {
   String? get comment => throw _privateConstructorUsedError;
   DateTime? get createdAt => throw _privateConstructorUsedError;
 
-  /// Serializes this Review to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of Review
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $ReviewCopyWith<Review> get copyWith => throw _privateConstructorUsedError;
 }
 
@@ -65,8 +61,6 @@ class _$ReviewCopyWithImpl<$Res, $Val extends Review>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of Review
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -110,8 +104,6 @@ class _$ReviewCopyWithImpl<$Res, $Val extends Review>
     ) as $Val);
   }
 
-  /// Create a copy of Review
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $ReviewUserCopyWith<$Res> get patientId {
@@ -149,8 +141,6 @@ class __$$ReviewImplCopyWithImpl<$Res>
       _$ReviewImpl _value, $Res Function(_$ReviewImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of Review
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -249,14 +239,12 @@ class _$ReviewImpl implements _Review {
                 other.createdAt == createdAt));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, id, appointmentId, patientId,
       doctorId, rating, comment, createdAt);
 
-  /// Create a copy of Review
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ReviewImplCopyWith<_$ReviewImpl> get copyWith =>
@@ -297,11 +285,8 @@ abstract class _Review implements Review {
   String? get comment;
   @override
   DateTime? get createdAt;
-
-  /// Create a copy of Review
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$ReviewImplCopyWith<_$ReviewImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -317,12 +302,8 @@ mixin _$ReviewUser {
   String? get name => throw _privateConstructorUsedError;
   String? get avatar => throw _privateConstructorUsedError;
 
-  /// Serializes this ReviewUser to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of ReviewUser
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $ReviewUserCopyWith<ReviewUser> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -346,8 +327,6 @@ class _$ReviewUserCopyWithImpl<$Res, $Val extends ReviewUser>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of ReviewUser
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -391,8 +370,6 @@ class __$$ReviewUserImplCopyWithImpl<$Res>
       _$ReviewUserImpl _value, $Res Function(_$ReviewUserImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of ReviewUser
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -449,13 +426,11 @@ class _$ReviewUserImpl implements _ReviewUser {
             (identical(other.avatar, avatar) || other.avatar == avatar));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, id, name, avatar);
 
-  /// Create a copy of ReviewUser
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ReviewUserImplCopyWith<_$ReviewUserImpl> get copyWith =>
@@ -485,11 +460,8 @@ abstract class _ReviewUser implements ReviewUser {
   String? get name;
   @override
   String? get avatar;
-
-  /// Create a copy of ReviewUser
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$ReviewUserImplCopyWith<_$ReviewUserImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -503,12 +475,8 @@ mixin _$ReviewCheckResponse {
   bool get hasReview => throw _privateConstructorUsedError;
   Review? get review => throw _privateConstructorUsedError;
 
-  /// Serializes this ReviewCheckResponse to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of ReviewCheckResponse
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $ReviewCheckResponseCopyWith<ReviewCheckResponse> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -534,8 +502,6 @@ class _$ReviewCheckResponseCopyWithImpl<$Res, $Val extends ReviewCheckResponse>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of ReviewCheckResponse
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -554,8 +520,6 @@ class _$ReviewCheckResponseCopyWithImpl<$Res, $Val extends ReviewCheckResponse>
     ) as $Val);
   }
 
-  /// Create a copy of ReviewCheckResponse
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $ReviewCopyWith<$Res>? get review {
@@ -591,8 +555,6 @@ class __$$ReviewCheckResponseImplCopyWithImpl<$Res>
       $Res Function(_$ReviewCheckResponseImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of ReviewCheckResponse
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -640,13 +602,11 @@ class _$ReviewCheckResponseImpl implements _ReviewCheckResponse {
             (identical(other.review, review) || other.review == review));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, hasReview, review);
 
-  /// Create a copy of ReviewCheckResponse
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$ReviewCheckResponseImplCopyWith<_$ReviewCheckResponseImpl> get copyWith =>
@@ -673,11 +633,8 @@ abstract class _ReviewCheckResponse implements ReviewCheckResponse {
   bool get hasReview;
   @override
   Review? get review;
-
-  /// Create a copy of ReviewCheckResponse
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$ReviewCheckResponseImplCopyWith<_$ReviewCheckResponseImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }

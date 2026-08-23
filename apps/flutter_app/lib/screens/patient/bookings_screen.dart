@@ -1117,6 +1117,17 @@ class _AppointmentCard extends StatelessWidget {
                       ),
                     ],
                   ),
+                  if (appointment.patientProfile != null) ...[
+                    const SizedBox(height: UIConstants.spacingSmall),
+                    _DetailRow(
+                      icon: Icons.person_outline,
+                      label: 'Patient',
+                      value: appointment.patientProfile!.relationship != null &&
+                              appointment.patientProfile!.relationship!.isNotEmpty
+                          ? '${appointment.patientProfile!.name} (${appointment.patientProfile!.relationship})'
+                          : appointment.patientProfile!.name,
+                    ),
+                  ],
                   if (appointment.symptoms != null) ...[
                     const SizedBox(height: UIConstants.spacingSmall),
                     _DetailRow(

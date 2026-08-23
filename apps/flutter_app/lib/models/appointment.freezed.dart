@@ -34,14 +34,12 @@ mixin _$Appointment {
   double get amount => throw _privateConstructorUsedError;
   String get paymentStatus => throw _privateConstructorUsedError;
   String? get meetingLink => throw _privateConstructorUsedError;
+  AppointmentPatientProfile? get patientProfile =>
+      throw _privateConstructorUsedError;
   DateTime? get createdAt => throw _privateConstructorUsedError;
 
-  /// Serializes this Appointment to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of Appointment
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $AppointmentCopyWith<Appointment> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -66,10 +64,12 @@ abstract class $AppointmentCopyWith<$Res> {
       double amount,
       String paymentStatus,
       String? meetingLink,
+      AppointmentPatientProfile? patientProfile,
       DateTime? createdAt});
 
   $AppointmentDoctorCopyWith<$Res> get doctorId;
   $AppointmentTimeSlotCopyWith<$Res> get timeSlot;
+  $AppointmentPatientProfileCopyWith<$Res>? get patientProfile;
 }
 
 /// @nodoc
@@ -82,8 +82,6 @@ class _$AppointmentCopyWithImpl<$Res, $Val extends Appointment>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of Appointment
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -100,6 +98,7 @@ class _$AppointmentCopyWithImpl<$Res, $Val extends Appointment>
     Object? amount = null,
     Object? paymentStatus = null,
     Object? meetingLink = freezed,
+    Object? patientProfile = freezed,
     Object? createdAt = freezed,
   }) {
     return _then(_value.copyWith(
@@ -155,6 +154,10 @@ class _$AppointmentCopyWithImpl<$Res, $Val extends Appointment>
           ? _value.meetingLink
           : meetingLink // ignore: cast_nullable_to_non_nullable
               as String?,
+      patientProfile: freezed == patientProfile
+          ? _value.patientProfile
+          : patientProfile // ignore: cast_nullable_to_non_nullable
+              as AppointmentPatientProfile?,
       createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -162,8 +165,6 @@ class _$AppointmentCopyWithImpl<$Res, $Val extends Appointment>
     ) as $Val);
   }
 
-  /// Create a copy of Appointment
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $AppointmentDoctorCopyWith<$Res> get doctorId {
@@ -172,13 +173,24 @@ class _$AppointmentCopyWithImpl<$Res, $Val extends Appointment>
     });
   }
 
-  /// Create a copy of Appointment
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $AppointmentTimeSlotCopyWith<$Res> get timeSlot {
     return $AppointmentTimeSlotCopyWith<$Res>(_value.timeSlot, (value) {
       return _then(_value.copyWith(timeSlot: value) as $Val);
+    });
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $AppointmentPatientProfileCopyWith<$Res>? get patientProfile {
+    if (_value.patientProfile == null) {
+      return null;
+    }
+
+    return $AppointmentPatientProfileCopyWith<$Res>(_value.patientProfile!,
+        (value) {
+      return _then(_value.copyWith(patientProfile: value) as $Val);
     });
   }
 }
@@ -205,12 +217,15 @@ abstract class _$$AppointmentImplCopyWith<$Res>
       double amount,
       String paymentStatus,
       String? meetingLink,
+      AppointmentPatientProfile? patientProfile,
       DateTime? createdAt});
 
   @override
   $AppointmentDoctorCopyWith<$Res> get doctorId;
   @override
   $AppointmentTimeSlotCopyWith<$Res> get timeSlot;
+  @override
+  $AppointmentPatientProfileCopyWith<$Res>? get patientProfile;
 }
 
 /// @nodoc
@@ -221,8 +236,6 @@ class __$$AppointmentImplCopyWithImpl<$Res>
       _$AppointmentImpl _value, $Res Function(_$AppointmentImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of Appointment
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -239,6 +252,7 @@ class __$$AppointmentImplCopyWithImpl<$Res>
     Object? amount = null,
     Object? paymentStatus = null,
     Object? meetingLink = freezed,
+    Object? patientProfile = freezed,
     Object? createdAt = freezed,
   }) {
     return _then(_$AppointmentImpl(
@@ -294,6 +308,10 @@ class __$$AppointmentImplCopyWithImpl<$Res>
           ? _value.meetingLink
           : meetingLink // ignore: cast_nullable_to_non_nullable
               as String?,
+      patientProfile: freezed == patientProfile
+          ? _value.patientProfile
+          : patientProfile // ignore: cast_nullable_to_non_nullable
+              as AppointmentPatientProfile?,
       createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
@@ -319,6 +337,7 @@ class _$AppointmentImpl implements _Appointment {
       this.amount = 0.0,
       this.paymentStatus = 'pending',
       this.meetingLink,
+      this.patientProfile,
       this.createdAt});
 
   factory _$AppointmentImpl.fromJson(Map<String, dynamic> json) =>
@@ -355,11 +374,13 @@ class _$AppointmentImpl implements _Appointment {
   @override
   final String? meetingLink;
   @override
+  final AppointmentPatientProfile? patientProfile;
+  @override
   final DateTime? createdAt;
 
   @override
   String toString() {
-    return 'Appointment(id: $id, patientId: $patientId, doctorId: $doctorId, date: $date, timeSlot: $timeSlot, type: $type, status: $status, symptoms: $symptoms, notes: $notes, prescription: $prescription, amount: $amount, paymentStatus: $paymentStatus, meetingLink: $meetingLink, createdAt: $createdAt)';
+    return 'Appointment(id: $id, patientId: $patientId, doctorId: $doctorId, date: $date, timeSlot: $timeSlot, type: $type, status: $status, symptoms: $symptoms, notes: $notes, prescription: $prescription, amount: $amount, paymentStatus: $paymentStatus, meetingLink: $meetingLink, patientProfile: $patientProfile, createdAt: $createdAt)';
   }
 
   @override
@@ -387,11 +408,13 @@ class _$AppointmentImpl implements _Appointment {
                 other.paymentStatus == paymentStatus) &&
             (identical(other.meetingLink, meetingLink) ||
                 other.meetingLink == meetingLink) &&
+            (identical(other.patientProfile, patientProfile) ||
+                other.patientProfile == patientProfile) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -408,11 +431,10 @@ class _$AppointmentImpl implements _Appointment {
       amount,
       paymentStatus,
       meetingLink,
+      patientProfile,
       createdAt);
 
-  /// Create a copy of Appointment
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$AppointmentImplCopyWith<_$AppointmentImpl> get copyWith =>
@@ -441,6 +463,7 @@ abstract class _Appointment implements Appointment {
       final double amount,
       final String paymentStatus,
       final String? meetingLink,
+      final AppointmentPatientProfile? patientProfile,
       final DateTime? createdAt}) = _$AppointmentImpl;
 
   factory _Appointment.fromJson(Map<String, dynamic> json) =
@@ -474,14 +497,212 @@ abstract class _Appointment implements Appointment {
   @override
   String? get meetingLink;
   @override
-  DateTime? get createdAt;
-
-  /// Create a copy of Appointment
-  /// with the given fields replaced by the non-null parameter values.
+  AppointmentPatientProfile? get patientProfile;
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  DateTime? get createdAt;
+  @override
+  @JsonKey(ignore: true)
   _$$AppointmentImplCopyWith<_$AppointmentImpl> get copyWith =>
       throw _privateConstructorUsedError;
+}
+
+AppointmentPatientProfile _$AppointmentPatientProfileFromJson(
+    Map<String, dynamic> json) {
+  return _AppointmentPatientProfile.fromJson(json);
+}
+
+/// @nodoc
+mixin _$AppointmentPatientProfile {
+  String get name => throw _privateConstructorUsedError;
+  int get age => throw _privateConstructorUsedError;
+  String get gender => throw _privateConstructorUsedError;
+  String? get relationship => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $AppointmentPatientProfileCopyWith<AppointmentPatientProfile> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $AppointmentPatientProfileCopyWith<$Res> {
+  factory $AppointmentPatientProfileCopyWith(AppointmentPatientProfile value,
+          $Res Function(AppointmentPatientProfile) then) =
+      _$AppointmentPatientProfileCopyWithImpl<$Res, AppointmentPatientProfile>;
+  @useResult
+  $Res call({String name, int age, String gender, String? relationship});
+}
+
+/// @nodoc
+class _$AppointmentPatientProfileCopyWithImpl<$Res,
+        $Val extends AppointmentPatientProfile>
+    implements $AppointmentPatientProfileCopyWith<$Res> {
+  _$AppointmentPatientProfileCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? age = null,
+    Object? gender = null,
+    Object? relationship = freezed,
+  }) {
+    return _then(_value.copyWith(
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      age: null == age
+          ? _value.age
+          : age // ignore: cast_nullable_to_non_nullable
+              as int,
+      gender: null == gender
+          ? _value.gender
+          : gender // ignore: cast_nullable_to_non_nullable
+              as String,
+      relationship: freezed == relationship
+          ? _value.relationship
+          : relationship // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$AppointmentPatientProfileImplCopyWith<$Res>
+    implements $AppointmentPatientProfileCopyWith<$Res> {
+  factory _$$AppointmentPatientProfileImplCopyWith(
+          _$AppointmentPatientProfileImpl value,
+          $Res Function(_$AppointmentPatientProfileImpl) then) =
+      __$$AppointmentPatientProfileImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call({String name, int age, String gender, String? relationship});
+}
+
+/// @nodoc
+class __$$AppointmentPatientProfileImplCopyWithImpl<$Res>
+    extends _$AppointmentPatientProfileCopyWithImpl<$Res,
+        _$AppointmentPatientProfileImpl>
+    implements _$$AppointmentPatientProfileImplCopyWith<$Res> {
+  __$$AppointmentPatientProfileImplCopyWithImpl(
+      _$AppointmentPatientProfileImpl _value,
+      $Res Function(_$AppointmentPatientProfileImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? name = null,
+    Object? age = null,
+    Object? gender = null,
+    Object? relationship = freezed,
+  }) {
+    return _then(_$AppointmentPatientProfileImpl(
+      name: null == name
+          ? _value.name
+          : name // ignore: cast_nullable_to_non_nullable
+              as String,
+      age: null == age
+          ? _value.age
+          : age // ignore: cast_nullable_to_non_nullable
+              as int,
+      gender: null == gender
+          ? _value.gender
+          : gender // ignore: cast_nullable_to_non_nullable
+              as String,
+      relationship: freezed == relationship
+          ? _value.relationship
+          : relationship // ignore: cast_nullable_to_non_nullable
+              as String?,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$AppointmentPatientProfileImpl implements _AppointmentPatientProfile {
+  const _$AppointmentPatientProfileImpl(
+      {required this.name,
+      required this.age,
+      required this.gender,
+      this.relationship});
+
+  factory _$AppointmentPatientProfileImpl.fromJson(Map<String, dynamic> json) =>
+      _$$AppointmentPatientProfileImplFromJson(json);
+
+  @override
+  final String name;
+  @override
+  final int age;
+  @override
+  final String gender;
+  @override
+  final String? relationship;
+
+  @override
+  String toString() {
+    return 'AppointmentPatientProfile(name: $name, age: $age, gender: $gender, relationship: $relationship)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$AppointmentPatientProfileImpl &&
+            (identical(other.name, name) || other.name == name) &&
+            (identical(other.age, age) || other.age == age) &&
+            (identical(other.gender, gender) || other.gender == gender) &&
+            (identical(other.relationship, relationship) ||
+                other.relationship == relationship));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, name, age, gender, relationship);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$AppointmentPatientProfileImplCopyWith<_$AppointmentPatientProfileImpl>
+      get copyWith => __$$AppointmentPatientProfileImplCopyWithImpl<
+          _$AppointmentPatientProfileImpl>(this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$AppointmentPatientProfileImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _AppointmentPatientProfile implements AppointmentPatientProfile {
+  const factory _AppointmentPatientProfile(
+      {required final String name,
+      required final int age,
+      required final String gender,
+      final String? relationship}) = _$AppointmentPatientProfileImpl;
+
+  factory _AppointmentPatientProfile.fromJson(Map<String, dynamic> json) =
+      _$AppointmentPatientProfileImpl.fromJson;
+
+  @override
+  String get name;
+  @override
+  int get age;
+  @override
+  String get gender;
+  @override
+  String? get relationship;
+  @override
+  @JsonKey(ignore: true)
+  _$$AppointmentPatientProfileImplCopyWith<_$AppointmentPatientProfileImpl>
+      get copyWith => throw _privateConstructorUsedError;
 }
 
 AppointmentDoctor _$AppointmentDoctorFromJson(Map<String, dynamic> json) {
@@ -494,12 +715,8 @@ mixin _$AppointmentDoctor {
   String get id => throw _privateConstructorUsedError;
   AppointmentDoctorUser? get userId => throw _privateConstructorUsedError;
 
-  /// Serializes this AppointmentDoctor to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of AppointmentDoctor
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $AppointmentDoctorCopyWith<AppointmentDoctor> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -525,8 +742,6 @@ class _$AppointmentDoctorCopyWithImpl<$Res, $Val extends AppointmentDoctor>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of AppointmentDoctor
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -545,8 +760,6 @@ class _$AppointmentDoctorCopyWithImpl<$Res, $Val extends AppointmentDoctor>
     ) as $Val);
   }
 
-  /// Create a copy of AppointmentDoctor
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $AppointmentDoctorUserCopyWith<$Res>? get userId {
@@ -582,8 +795,6 @@ class __$$AppointmentDoctorImplCopyWithImpl<$Res>
       $Res Function(_$AppointmentDoctorImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of AppointmentDoctor
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -632,13 +843,11 @@ class _$AppointmentDoctorImpl implements _AppointmentDoctor {
             (identical(other.userId, userId) || other.userId == userId));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, id, userId);
 
-  /// Create a copy of AppointmentDoctor
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$AppointmentDoctorImplCopyWith<_$AppointmentDoctorImpl> get copyWith =>
@@ -666,11 +875,8 @@ abstract class _AppointmentDoctor implements AppointmentDoctor {
   String get id;
   @override
   AppointmentDoctorUser? get userId;
-
-  /// Create a copy of AppointmentDoctor
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$AppointmentDoctorImplCopyWith<_$AppointmentDoctorImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -687,12 +893,8 @@ mixin _$AppointmentDoctorUser {
   String? get name => throw _privateConstructorUsedError;
   String? get phone => throw _privateConstructorUsedError;
 
-  /// Serializes this AppointmentDoctorUser to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of AppointmentDoctorUser
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $AppointmentDoctorUserCopyWith<AppointmentDoctorUser> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -717,8 +919,6 @@ class _$AppointmentDoctorUserCopyWithImpl<$Res,
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of AppointmentDoctorUser
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -764,8 +964,6 @@ class __$$AppointmentDoctorUserImplCopyWithImpl<$Res>
       $Res Function(_$AppointmentDoctorUserImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of AppointmentDoctorUser
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -822,13 +1020,11 @@ class _$AppointmentDoctorUserImpl implements _AppointmentDoctorUser {
             (identical(other.phone, phone) || other.phone == phone));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, id, name, phone);
 
-  /// Create a copy of AppointmentDoctorUser
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$AppointmentDoctorUserImplCopyWith<_$AppointmentDoctorUserImpl>
@@ -859,11 +1055,8 @@ abstract class _AppointmentDoctorUser implements AppointmentDoctorUser {
   String? get name;
   @override
   String? get phone;
-
-  /// Create a copy of AppointmentDoctorUser
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$AppointmentDoctorUserImplCopyWith<_$AppointmentDoctorUserImpl>
       get copyWith => throw _privateConstructorUsedError;
 }
@@ -877,12 +1070,8 @@ mixin _$AppointmentTimeSlot {
   String get start => throw _privateConstructorUsedError;
   String get end => throw _privateConstructorUsedError;
 
-  /// Serializes this AppointmentTimeSlot to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of AppointmentTimeSlot
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $AppointmentTimeSlotCopyWith<AppointmentTimeSlot> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -906,8 +1095,6 @@ class _$AppointmentTimeSlotCopyWithImpl<$Res, $Val extends AppointmentTimeSlot>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of AppointmentTimeSlot
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -946,8 +1133,6 @@ class __$$AppointmentTimeSlotImplCopyWithImpl<$Res>
       $Res Function(_$AppointmentTimeSlotImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of AppointmentTimeSlot
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -994,13 +1179,11 @@ class _$AppointmentTimeSlotImpl implements _AppointmentTimeSlot {
             (identical(other.end, end) || other.end == end));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, start, end);
 
-  /// Create a copy of AppointmentTimeSlot
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$AppointmentTimeSlotImplCopyWith<_$AppointmentTimeSlotImpl> get copyWith =>
@@ -1027,11 +1210,8 @@ abstract class _AppointmentTimeSlot implements AppointmentTimeSlot {
   String get start;
   @override
   String get end;
-
-  /// Create a copy of AppointmentTimeSlot
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$AppointmentTimeSlotImplCopyWith<_$AppointmentTimeSlotImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1055,13 +1235,11 @@ mixin _$DoctorAppointment {
   String? get prescription => throw _privateConstructorUsedError;
   double get amount => throw _privateConstructorUsedError;
   String get paymentStatus => throw _privateConstructorUsedError;
+  AppointmentPatientProfile? get patientProfile =>
+      throw _privateConstructorUsedError;
 
-  /// Serializes this DoctorAppointment to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of DoctorAppointment
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $DoctorAppointmentCopyWith<DoctorAppointment> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1084,10 +1262,12 @@ abstract class $DoctorAppointmentCopyWith<$Res> {
       String? notes,
       String? prescription,
       double amount,
-      String paymentStatus});
+      String paymentStatus,
+      AppointmentPatientProfile? patientProfile});
 
   $PatientInfoCopyWith<$Res> get patientId;
   $AppointmentTimeSlotCopyWith<$Res> get timeSlot;
+  $AppointmentPatientProfileCopyWith<$Res>? get patientProfile;
 }
 
 /// @nodoc
@@ -1100,8 +1280,6 @@ class _$DoctorAppointmentCopyWithImpl<$Res, $Val extends DoctorAppointment>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of DoctorAppointment
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1117,6 +1295,7 @@ class _$DoctorAppointmentCopyWithImpl<$Res, $Val extends DoctorAppointment>
     Object? prescription = freezed,
     Object? amount = null,
     Object? paymentStatus = null,
+    Object? patientProfile = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -1167,11 +1346,13 @@ class _$DoctorAppointmentCopyWithImpl<$Res, $Val extends DoctorAppointment>
           ? _value.paymentStatus
           : paymentStatus // ignore: cast_nullable_to_non_nullable
               as String,
+      patientProfile: freezed == patientProfile
+          ? _value.patientProfile
+          : patientProfile // ignore: cast_nullable_to_non_nullable
+              as AppointmentPatientProfile?,
     ) as $Val);
   }
 
-  /// Create a copy of DoctorAppointment
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $PatientInfoCopyWith<$Res> get patientId {
@@ -1180,13 +1361,24 @@ class _$DoctorAppointmentCopyWithImpl<$Res, $Val extends DoctorAppointment>
     });
   }
 
-  /// Create a copy of DoctorAppointment
-  /// with the given fields replaced by the non-null parameter values.
   @override
   @pragma('vm:prefer-inline')
   $AppointmentTimeSlotCopyWith<$Res> get timeSlot {
     return $AppointmentTimeSlotCopyWith<$Res>(_value.timeSlot, (value) {
       return _then(_value.copyWith(timeSlot: value) as $Val);
+    });
+  }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $AppointmentPatientProfileCopyWith<$Res>? get patientProfile {
+    if (_value.patientProfile == null) {
+      return null;
+    }
+
+    return $AppointmentPatientProfileCopyWith<$Res>(_value.patientProfile!,
+        (value) {
+      return _then(_value.copyWith(patientProfile: value) as $Val);
     });
   }
 }
@@ -1211,12 +1403,15 @@ abstract class _$$DoctorAppointmentImplCopyWith<$Res>
       String? notes,
       String? prescription,
       double amount,
-      String paymentStatus});
+      String paymentStatus,
+      AppointmentPatientProfile? patientProfile});
 
   @override
   $PatientInfoCopyWith<$Res> get patientId;
   @override
   $AppointmentTimeSlotCopyWith<$Res> get timeSlot;
+  @override
+  $AppointmentPatientProfileCopyWith<$Res>? get patientProfile;
 }
 
 /// @nodoc
@@ -1227,8 +1422,6 @@ class __$$DoctorAppointmentImplCopyWithImpl<$Res>
       $Res Function(_$DoctorAppointmentImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of DoctorAppointment
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1244,6 +1437,7 @@ class __$$DoctorAppointmentImplCopyWithImpl<$Res>
     Object? prescription = freezed,
     Object? amount = null,
     Object? paymentStatus = null,
+    Object? patientProfile = freezed,
   }) {
     return _then(_$DoctorAppointmentImpl(
       id: null == id
@@ -1294,6 +1488,10 @@ class __$$DoctorAppointmentImplCopyWithImpl<$Res>
           ? _value.paymentStatus
           : paymentStatus // ignore: cast_nullable_to_non_nullable
               as String,
+      patientProfile: freezed == patientProfile
+          ? _value.patientProfile
+          : patientProfile // ignore: cast_nullable_to_non_nullable
+              as AppointmentPatientProfile?,
     ));
   }
 }
@@ -1313,7 +1511,8 @@ class _$DoctorAppointmentImpl implements _DoctorAppointment {
       this.notes,
       this.prescription,
       this.amount = 0.0,
-      this.paymentStatus = 'pending'});
+      this.paymentStatus = 'pending',
+      this.patientProfile});
 
   factory _$DoctorAppointmentImpl.fromJson(Map<String, dynamic> json) =>
       _$$DoctorAppointmentImplFromJson(json);
@@ -1346,10 +1545,12 @@ class _$DoctorAppointmentImpl implements _DoctorAppointment {
   @override
   @JsonKey()
   final String paymentStatus;
+  @override
+  final AppointmentPatientProfile? patientProfile;
 
   @override
   String toString() {
-    return 'DoctorAppointment(id: $id, patientId: $patientId, doctorId: $doctorId, date: $date, timeSlot: $timeSlot, type: $type, status: $status, symptoms: $symptoms, notes: $notes, prescription: $prescription, amount: $amount, paymentStatus: $paymentStatus)';
+    return 'DoctorAppointment(id: $id, patientId: $patientId, doctorId: $doctorId, date: $date, timeSlot: $timeSlot, type: $type, status: $status, symptoms: $symptoms, notes: $notes, prescription: $prescription, amount: $amount, paymentStatus: $paymentStatus, patientProfile: $patientProfile)';
   }
 
   @override
@@ -1374,10 +1575,12 @@ class _$DoctorAppointmentImpl implements _DoctorAppointment {
                 other.prescription == prescription) &&
             (identical(other.amount, amount) || other.amount == amount) &&
             (identical(other.paymentStatus, paymentStatus) ||
-                other.paymentStatus == paymentStatus));
+                other.paymentStatus == paymentStatus) &&
+            (identical(other.patientProfile, patientProfile) ||
+                other.patientProfile == patientProfile));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
@@ -1392,11 +1595,10 @@ class _$DoctorAppointmentImpl implements _DoctorAppointment {
       notes,
       prescription,
       amount,
-      paymentStatus);
+      paymentStatus,
+      patientProfile);
 
-  /// Create a copy of DoctorAppointment
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$DoctorAppointmentImplCopyWith<_$DoctorAppointmentImpl> get copyWith =>
@@ -1413,18 +1615,20 @@ class _$DoctorAppointmentImpl implements _DoctorAppointment {
 
 abstract class _DoctorAppointment implements DoctorAppointment {
   const factory _DoctorAppointment(
-      {@JsonKey(name: '_id') required final String id,
-      required final PatientInfo patientId,
-      required final String doctorId,
-      required final DateTime date,
-      required final AppointmentTimeSlot timeSlot,
-      required final String type,
-      final String status,
-      final String? symptoms,
-      final String? notes,
-      final String? prescription,
-      final double amount,
-      final String paymentStatus}) = _$DoctorAppointmentImpl;
+          {@JsonKey(name: '_id') required final String id,
+          required final PatientInfo patientId,
+          required final String doctorId,
+          required final DateTime date,
+          required final AppointmentTimeSlot timeSlot,
+          required final String type,
+          final String status,
+          final String? symptoms,
+          final String? notes,
+          final String? prescription,
+          final double amount,
+          final String paymentStatus,
+          final AppointmentPatientProfile? patientProfile}) =
+      _$DoctorAppointmentImpl;
 
   factory _DoctorAppointment.fromJson(Map<String, dynamic> json) =
       _$DoctorAppointmentImpl.fromJson;
@@ -1454,11 +1658,10 @@ abstract class _DoctorAppointment implements DoctorAppointment {
   double get amount;
   @override
   String get paymentStatus;
-
-  /// Create a copy of DoctorAppointment
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  AppointmentPatientProfile? get patientProfile;
+  @override
+  @JsonKey(ignore: true)
   _$$DoctorAppointmentImplCopyWith<_$DoctorAppointmentImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1475,12 +1678,8 @@ mixin _$PatientInfo {
   String? get phone => throw _privateConstructorUsedError;
   String? get avatar => throw _privateConstructorUsedError;
 
-  /// Serializes this PatientInfo to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
-
-  /// Create a copy of PatientInfo
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   $PatientInfoCopyWith<PatientInfo> get copyWith =>
       throw _privateConstructorUsedError;
 }
@@ -1508,8 +1707,6 @@ class _$PatientInfoCopyWithImpl<$Res, $Val extends PatientInfo>
   // ignore: unused_field
   final $Res Function($Val) _then;
 
-  /// Create a copy of PatientInfo
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1562,8 +1759,6 @@ class __$$PatientInfoImplCopyWithImpl<$Res>
       _$PatientInfoImpl _value, $Res Function(_$PatientInfoImpl) _then)
       : super(_value, _then);
 
-  /// Create a copy of PatientInfo
-  /// with the given fields replaced by the non-null parameter values.
   @pragma('vm:prefer-inline')
   @override
   $Res call({
@@ -1631,13 +1826,11 @@ class _$PatientInfoImpl implements _PatientInfo {
             (identical(other.avatar, avatar) || other.avatar == avatar));
   }
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, id, name, phone, avatar);
 
-  /// Create a copy of PatientInfo
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   @override
   @pragma('vm:prefer-inline')
   _$$PatientInfoImplCopyWith<_$PatientInfoImpl> get copyWith =>
@@ -1670,11 +1863,8 @@ abstract class _PatientInfo implements PatientInfo {
   String? get phone;
   @override
   String? get avatar;
-
-  /// Create a copy of PatientInfo
-  /// with the given fields replaced by the non-null parameter values.
   @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
+  @JsonKey(ignore: true)
   _$$PatientInfoImplCopyWith<_$PatientInfoImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
